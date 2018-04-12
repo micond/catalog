@@ -12,7 +12,7 @@ import httplib2
 import requests
 import random
 import string
-from flask.ext.httpauth import HTTPBasicAuth
+from flask.httpauth import HTTPBasicAuth 
 
 
 auth = HTTPBasicAuth()
