@@ -1,0 +1,48 @@
+<html>
+
+<head>
+<!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"> -->
+	</head>
+
+<body><h1> Edit Movie Item </h1>
+
+<form action="#" method = 'post'>
+
+
+	<p>backdrop_path:</p>
+		<input type ='text' size='30' name='backdrop_path' placeholder = '{{item.backdrop_path}}'>
+	<p>themoviedb_movie_id:</p>
+		<input type ='text' size='30' name='themoviedb_movie_id' placeholder = '{{item.themoviedb_movie_id}}'>
+    <p>original_title:</p>
+		<input type ='text' size='30' name='original_title' placeholder = '{{item.original_title }}'>
+	<p>overview:</p>
+		<input type ='text' size='30' name='overview' placeholder = '{{item.overview}}'>
+	<p>release_date:</p>
+		<input type ='text' size='30' name='release_date' placeholder = '{{item.release_date}}'>
+	<p>poster_path:</p>
+		<input type ='text' size='30' name='poster_path' placeholder = '{{item.poster_path }}'>
+	<p>popularity:</p>
+		<input type ='text' size='30' name='popularity' placeholder = '{{item.popularity}}'>
+	<p>title:</p>
+		<input type ='text' size='30' name='title' placeholder = '{{item.title}}'>		
+	<p>video:</p>
+		<input type ='text' size='30' name='video' placeholder = '{{item.video}}'>
+	<p>vote_average:</p>
+		<input type ='text' size='30' name='vote_average' placeholder = '{{item.vote_average }}'>
+	<p>vote_count:</p>
+		<input type ='text' size='30' name='vote_count' placeholder = '{{item.vote_count}}'>
+	<p>category_id:</p>
+		<input type ='text' size='30' name='category_id' placeholder = '{{item.category_id}}'>	
+	
+
+
+<input type='submit' value='Edit'>
+
+
+<a href = 'http://localhost:5000/'> Cancel </a>
+
+
+</form>
+</body>
+</html>
+

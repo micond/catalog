@@ -1,0 +1,23 @@
+<html>
+
+<head>
+<!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"> -->
+	</head>
+<body>
+{% for movie in movie %}
+	<h1>{{movie.title}}</h1>
+	<h3>Overview:</h3>
+	<p>{{movie.overview}}</p></a>
+	<p>Created by:{{movie.created_by}}</p></a>	
+	<p><a href = "{{url_for('editMovie',movie_id = movie.id)}}">Edit Movie</a></p>
+	<p><a href = "{{url_for('deleteMovie',movie_id = movie.id)}}">delete Movie</a></p>
+
+{% endfor %}
+
+
+
+
+
+
+</body>
+</html>
