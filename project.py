@@ -32,13 +32,13 @@ app = Flask(__name__)
 
 @auth.verify_password
 def verify_password(username, password):
-    print "Looking for user %s" % username
+    print ("Looking for user %s" % username)
     user = session.query(User).filter_by(username=username).first()
     if not user:
-        print "User not found"
+        print ("User not found")
         return False
     elif not user.verify_password(password):
-        print "Unable to verfy password"
+        print ("Unable to verfy password")
         return False
     else:
         g.user = user
@@ -50,11 +50,11 @@ def new_user():
     username = request.json.get('username')
     password = request.json.get('password')
     if username is None or password is None:
-        print "missing arguments"
+        print ("missing arguments")
         abort(400)
 
     if session.query(User).filter_by(username=username).first() is not None:
-        print "existing user"
+        print ("existing user")
         user = session.query(User).filter_by(username=username).first()
         # , {'Location': url_for('get_user', id = user.id, _external = True)}
         return jsonify({'message': 'user already exists'}), 200
@@ -96,7 +96,7 @@ def showMovies():
 @app.route('/category/<int:category_id>/')
 def categorySelect(category_id):
     categoryName = session.query(Category.name).filter_by(id=category_id).one()
-    print categoryName
+    print (categoryName)
     category = session.query(Category).filter_by(id=category_id).one()
     categoryMovies = session.query(Movie).filter_by(category_id=category.id)
     return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
