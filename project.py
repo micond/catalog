@@ -214,7 +214,7 @@ def showCategories():
 @app.route('/movies/')
 def showMovies():
     movies = session.query(Movie).all()    
-    return render_template('allMovies.html', movies=movies)ll   
+    return render_template('allMovies.html', movies=movies) 
 
 @app.route('/category/<int:category_id>/')
 def categorySelect(category_id):
