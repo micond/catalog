@@ -93,11 +93,13 @@ class Genre(Base):
             'title': self.title,
         }
 
-
 class User(Base):
     __tablename__ = 'user'
+
     id = Column(Integer, primary_key=True)
-    username = Column(String(32), index=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    picture = Column(String(250))
     password_hash = Column(String(64))
 
     def hash_password(self, password):
