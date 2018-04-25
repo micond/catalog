@@ -4,7 +4,7 @@ import jsonify
 import requests
 from sqlalchemy import create_engine, select, func
 from sqlalchemy.orm import sessionmaker
-from database_setup import Category, Base, Movie, Genre
+from database_setup import Category, Base, Movie, Genre, User
 
 engine = create_engine('sqlite:///mymoviedb.db')
 Base.metadata.bind = engine
@@ -14,11 +14,14 @@ session = DBSession()
 THEMOVIEDB_KEY = json.loads(
     open('client_secrets.json', 'r').read())['web']['themoviedb_key']
 
-genreslist = requests.get("https://api.themoviedb.org/3/genre/movie/list?api_key={0}&language=en-US".format(THEMOVIEDB_KEY))
+genreslist = requests.get('https://api.themoviedb.org/3/genre/movie/list?api_key={0}&language=en-US'.format(THEMOVIEDB_KEY))
 obj = json.loads(genreslist.content)
+print obj
 last_category = obj['genres'][-1]['name']
+print last_category
 
 for i in obj['genres']:    
+    print "genres"
     getgenres = requests.get("https://api.themoviedb.org/3/genre/{0}/movies?api_key={1}&language=en-US&include_adult=false&sort_by=created_at.asc".format(i['id'],THEMOVIEDB_KEY))
     results = json.loads(getgenres.content)['results']  
     print "Adding movies to Category: ", i['name']
