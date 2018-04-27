@@ -209,7 +209,10 @@ def gdisconnect():
 def showCategories():
     categories = session.query(Category).all()
     lastMovies = session.query(Movie).order_by(desc(Movie.time_created)).limit(5)
-    return render_template('categories.html', categories=categories, lastMovies=lastMovies)
+    if 'username' not in login_session:
+        return render_template('publicCategories.html', categories=categories, lastMovies=lastMovies)
+    else:
+        return render_template('categories.html', categories=categories, lastMovies=lastMovies)
 
 @app.route('/movies/')
 def showMovies():
