@@ -1,0 +1,23 @@
+<html>
+
+<head>
+<!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"> -->
+	</head>
+
+
+<body>
+<div class = 'pane'>
+<h1>{{categoryName.name}} Movies:</h1>
+
+{% for categoryMovie in categoryMovies %}
+
+	<a href = "{{url_for('movie', movie_id = categoryMovie.id)}}"> <p>{{categoryMovie.title}}</p></a>
+
+{% endfor %}
+
+
+
+</div>
+</body>
+
+</html>

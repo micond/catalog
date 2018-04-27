@@ -216,8 +216,11 @@ def showCategories():
 
 @app.route('/movies/')
 def showMovies():
-    movies = session.query(Movie).all()    
-    return render_template('allMovies.html', movies=movies) 
+    movies = session.query(Movie).all()
+    if 'username' not in login_session:
+        return render_template('publicAllmovies.html', movies=movies)
+    else:
+        return render_template('allMovies.html', movies=movies)
 
 @app.route('/category/<int:category_id>/')
 def categorySelect(category_id):
@@ -226,6 +229,11 @@ def categorySelect(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     categoryMovies = session.query(Movie).filter_by(category_id=category.id)
     return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
+    if 'username' not in login_session:
+        return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
+    else:
+        return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
+
     # return jsonify(items=[i.serialize for i in items])
 
 @app.route('/last/JSON')
@@ -237,6 +245,10 @@ def lastAddedMovies():
 def movie(movie_id):
     movie = session.query(Movie).filter_by(id=movie_id)
     return render_template('movie.html', movie=movie)
+    if 'username' not in login_session:
+        return render_template('publicMovie.html', movie=movie)
+    else:
+        return render_template('movie.html', movie=movie)
     # return jsonify(item=[i.serialize for i in item])
 
 @app.route('/movie/new/', methods=['GET', 'POST'])
