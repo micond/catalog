@@ -65,9 +65,9 @@ def showLogin():
 
 @app.route('/logout')
 def logout():
-    if login_session['provider'] == 'facebook':
-        fbdisconnect()
-        del login_session['facebook_id']
+    # if login_session['provider'] == 'facebook':
+    #     fbdisconnect()
+    #     del login_session['facebook_id']
 
     if login_session['provider'] == 'google':
         gdisconnect()
