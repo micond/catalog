@@ -247,10 +247,15 @@ def lastAddedMovies():
 @app.route('/movie/<int:movie_id>')
 def movie(movie_id):
     movie = session.query(Movie).filter_by(id=movie_id)
+    # movieCreator = session.query(Movie).filter_by(id=movie_id).first().created_by
+    # movieCreator = login_session['email']
+    # print movieCreator
     if 'username' not in login_session:
         return render_template('publicMovie.html', movie=movie)
     else:
-        return render_template('movie.html', movie=movie)
+        # movieCreator = login_session['email']
+        print login_session['email']
+        return render_template('movie.html', movie=movie, movieCreator=login_session['email'])
     # return jsonify(item=[i.serialize for i in item])
 
 @app.route('/movie/new/', methods=['GET', 'POST'])

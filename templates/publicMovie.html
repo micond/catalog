@@ -9,6 +9,11 @@
 	<h3>Overview:</h3>
 	<p>{{movie.overview}}</p></a>
 	<p>Created by:{{movie.created_by}}</p></a>	
+	{{movieCreator}}
+	{% if movieCreator == movie.created_by %}
+		<p><a href = "{{url_for('editMovie',movie_id = movie.id)}}">Edit Movie</a></p>
+		<p><a href = "{{url_for('deleteMovie',movie_id = movie.id)}}">delete Movie</a></p>
+	{% endif %}
 
 {% endfor %}
 
