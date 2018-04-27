@@ -65,21 +65,25 @@ def showLogin():
 
 @app.route('/logout')
 def logout():
-    # if login_session['provider'] == 'facebook':
-    #     fbdisconnect()
-    #     del login_session['facebook_id']
+    if 'username' in login_session:
+        if login_session['provider'] == 'facebook':
+            fbdisconnect()
+            del login_session['facebook_id']
+            print "facebook"
 
-    if login_session['provider'] == 'google':
-        gdisconnect()
-        del login_session['gplus_id']
-        del login_session['access_token']
+        if login_session['provider'] == 'google':
+            gdisconnect()
+            del login_session['gplus_id']
+            del login_session['access_token']
+            print "google"
 
-    del login_session['username']
-    del login_session['email']
-    del login_session['picture']
-    del login_session['user_id']
-    del login_session['provider']
-
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['provider']
+        print "logout rest"
+        
 
     return redirect(url_for('showCategories'))
 
