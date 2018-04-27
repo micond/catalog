@@ -227,8 +227,7 @@ def categorySelect(category_id):
     categoryName = session.query(Category.name).filter_by(id=category_id).one()
     print (categoryName)
     category = session.query(Category).filter_by(id=category_id).one()
-    categoryMovies = session.query(Movie).filter_by(category_id=category.id)
-    return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
+    categoryMovies = session.query(Movie).filter_by(category_id=category.id)    
     if 'username' not in login_session:
         return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
     else:
@@ -244,7 +243,6 @@ def lastAddedMovies():
 @app.route('/movie/<int:movie_id>')
 def movie(movie_id):
     movie = session.query(Movie).filter_by(id=movie_id)
-    return render_template('movie.html', movie=movie)
     if 'username' not in login_session:
         return render_template('publicMovie.html', movie=movie)
     else:
