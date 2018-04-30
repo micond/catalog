@@ -19,7 +19,7 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/mo034u/Documents/Udacity_mint/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 engine = create_engine('sqlite:///mymoviedb.db')
