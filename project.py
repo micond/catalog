@@ -22,6 +22,9 @@ CLIENT_ID = json.loads(
     open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
+THEMOVIEDB_KEY = json.loads(
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
+
 engine = create_engine('sqlite:///mymoviedb.db')
 Base.metadata.bind = engine
 
@@ -319,8 +322,7 @@ def editMovie(movie_id):
             'editMovie.html',  movie_id=movie_id, item=editMovie)
 
 
-@app.route('/movie/<int:movie_id>/delete',
-           methods=['GET', 'POST'])
+@app.route('/movie/<int:movie_id>/delete',methods=['GET', 'POST'])
 def deleteMovie(movie_id):
     movieToDelete = session.query(Movie).filter_by(id=movie_id).one()
     if request.method == 'POST':
@@ -330,6 +332,16 @@ def deleteMovie(movie_id):
     else:
         return render_template('deleteMenuItem.html', item=movieToDelete)
 
+
+@app.route('/search/<string:search>')
+def searchMovie(search):
+    print search
+    result = requests.get('https://api.themoviedb.org/3/search/movie?api_key=1be56c93800eee251cd4fa586d774a09&language=en-US&query=Rogue%20One:%20A%20Star%20Wars%20Story&page=1&include_adult=false')
+    print result
+    obj = json.loads(result.content)
+    print obj
+    return obj
+#last_category = obj['genres'][-1]['name']
 
 
 if __name__ == '__main__':
