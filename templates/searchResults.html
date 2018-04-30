@@ -1,0 +1,18 @@
+<html>
+<head>
+    </head>
+    <body>
+        <h1>Search and add Movie</h1>
+        <a href = 'http://euve257775.serverprofi24.net:5000/search'>New search </a><br>
+            <a href = 'http://euve257775.serverprofi24.net:5000/'>Home</a>
+            {% for obj in obj %}
+                   <p>{{obj.title}}</p>
+                   <img src= "http://image.tmdb.org/t/p/w185{{obj.poster_path}}">
+                   <br>
+            {% endfor %}
+    
+
+
+    </body>
+    </html>
+

@@ -16,7 +16,10 @@
 
 
 <a href = "{{url_for('movie', movie_id = movie.id)}}"> <p>{{movie.title}}</p></a>
-
+    {% if movieCreator == movie.created_by %}
+         <p><a href = "{{url_for('editMovie',movie_id = movie.id)}}">Edit Movie</a></p>
+         <p><a href = "{{url_for('deleteMovie',movie_id = movie.id)}}">delete Movie</a></p>
+    {% endif %}
 
 
 {% endfor %}
