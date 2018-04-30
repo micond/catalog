@@ -234,7 +234,8 @@ def categorySelect(category_id):
     categoryName = session.query(Category.name).filter_by(id=category_id).one()
     print (categoryName)
     category = session.query(Category).filter_by(id=category_id).one()
-    categoryMovies = session.query(Movie).filter_by(category_id=category.id)    
+    categoryMovies = session.query(Movie).filter_by(category_id=category.id)   
+#    print categoryMovies[0]
     if 'username' not in login_session:
         return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
     else:

@@ -12,7 +12,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 THEMOVIEDB_KEY = json.loads(
-    open('client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
 
 genreslist = requests.get('https://api.themoviedb.org/3/genre/movie/list?api_key={0}&language=en-US'.format(THEMOVIEDB_KEY))
 obj = json.loads(genreslist.content)

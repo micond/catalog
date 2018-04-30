@@ -16,6 +16,7 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     themoviedb_genre_id = Column(Integer)
+    created_by = Column(String(250))
 
     @property
     def serialize(self):
@@ -23,6 +24,7 @@ class Category(Base):
         return {
             'name': self.name,
             'id': self.id,
+            'created_by':self.created_by,
         }
 
 class Movie(Base):
