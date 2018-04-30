@@ -19,7 +19,7 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/mo034u/Documents/Udacity_mint/client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 engine = create_engine('sqlite:///mymoviedb.db')
@@ -100,7 +100,7 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/home/micond/udacity/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
