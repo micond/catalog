@@ -226,8 +226,8 @@ def showMovies():
     movies = session.query(Movie).all()
     if 'username' not in login_session:
         return render_template('publicAllmovies.html', movies=movies)
-    else:
-        return render_template('allMovies.html', movies=movies)
+    else:        
+        return render_template('allMovies.html', movies=movies, movieCreator=login_session['email'])
 
 @app.route('/category/<int:category_id>/')
 def categorySelect(category_id):
@@ -238,7 +238,7 @@ def categorySelect(category_id):
     if 'username' not in login_session:
         return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
     else:
-        return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
+        return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName, movieCreator=login_session['email'])
 
     # return jsonify(items=[i.serialize for i in items])
 
@@ -333,15 +333,15 @@ def deleteMovie(movie_id):
         return render_template('deleteMenuItem.html', item=movieToDelete)
 
 
-@app.route('/search/<string:search>')
-def searchMovie(search):
-    print search
-    result = requests.get('https://api.themoviedb.org/3/search/movie?api_key=1be56c93800eee251cd4fa586d774a09&language=en-US&query=Rogue%20One:%20A%20Star%20Wars%20Story&page=1&include_adult=false')
-    print result
-    obj = json.loads(result.content)
-    print obj
-    return obj
-#last_category = obj['genres'][-1]['name']
+@app.route('/search/', methods=['GET','POST'])
+def searchMovie():
+    if request.method == 'POST':
+        searchTitle = request.form['title']
+        result = requests.get('https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
+        obj = json.loads(result.content)['results']
+        return render_template('searchResults.html', obj=obj) 
+    else:
+        return render_template('search.html')
 
 
 if __name__ == '__main__':

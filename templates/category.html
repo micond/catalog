@@ -12,8 +12,10 @@
 {% for categoryMovie in categoryMovies %}
 
 	<a href = "{{url_for('movie', movie_id = categoryMovie.id)}}"> <p>{{categoryMovie.title}}</p></a>
+    {% if movieCreator == categoryMovies.created_by %}
 	<p><a href = "{{url_for('editMovie',movie_id = categoryMovie.id)}}">Edit</a></p>
 	<p><a href = "{{url_for('deleteMovie',movie_id = categoryMovie.id)}}">Delete</a></p>
+    {% endif %}
 {% endfor %}
 
 

@@ -25,7 +25,7 @@ for i in obj['genres']:
     getgenres = requests.get("https://api.themoviedb.org/3/genre/{0}/movies?api_key={1}&language=en-US&include_adult=false&sort_by=created_at.asc".format(i['id'],THEMOVIEDB_KEY))
     results = json.loads(getgenres.content)['results']  
     print "Adding movies to Category: ", i['name']
-    category1 = Category(name=i['name'], themoviedb_genre_id=i['id'])
+    category1 = Category(name=i['name'], themoviedb_genre_id=i['id'], created_by='admin')
     session.add(category1)
     session.commit()
     actual_category = category1.id    
