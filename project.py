@@ -12,18 +12,19 @@ import httplib2
 import requests
 import random
 import string
-from flask.ext.httpauth import HTTPBasicAuth
+# from flask.ext.httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPBasicAuth
 
 auth = HTTPBasicAuth()
 
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
 
 engine = create_engine('sqlite:///mymoviedb.db')
 Base.metadata.bind = engine
@@ -98,12 +99,12 @@ def gconnect():
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    # Obtain authorization code
+    # Obtain authorization code 
     code = request.data
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('/home/micond/udacity/client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/home/michal/udacity/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
