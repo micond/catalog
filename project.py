@@ -12,18 +12,20 @@ import httplib2
 import requests
 import random
 import string
-from flask.ext.httpauth import HTTPBasicAuth
+# from flask.ext.httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPBasicAuth
+
 
 auth = HTTPBasicAuth()
 
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
 
 engine = create_engine('sqlite:///mymoviedb.db')
 Base.metadata.bind = engine
@@ -103,7 +105,7 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('/home/micond/udacity/client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/home/michal/udacity/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -229,12 +231,13 @@ def showMovies():
     else:        
         return render_template('allMovies.html', movies=movies, movieCreator=login_session['email'])
 
-@app.route('/category/<int:category_id>/')
-def categorySelect(category_id):
-    categoryName = session.query(Category.name).filter_by(id=category_id).one()
+@app.route('/category/<string:category_name>/')
+def categorySelect(category_name):
+    categoryName = session.query(Category.name).filter_by(name=category_name).one()
     print (categoryName)
-    category = session.query(Category).filter_by(id=category_id).one()
-    categoryMovies = session.query(Movie).filter_by(category_id=category.id)   
+    category = session.query(Category).filter_by(name=category_name).one()
+    # categoryMovies = session.query(Movie).filter_by(category_name=category.name)   
+    categoryMovies = session.query(Movie).outerjoin(Category,Movie.category_id == Category.id).filter(Category.name == category_name)
 #    print categoryMovies[0]
     if 'username' not in login_session:
         return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
