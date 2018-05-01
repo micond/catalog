@@ -265,6 +265,20 @@ def movie(movie_id):
         return render_template('movie.html', movie=movie, movieCreator=login_session['email'])
     # return jsonify(item=[i.serialize for i in item])
 
+@app.route('/movietitle/<string:movie_title>')
+def movietitle(movie_title):
+    movie = session.query(Movie).filter_by(title=movie_title)
+    # movieCreator = session.query(Movie).filter_by(id=movie_id).first().created_by
+    # movieCreator = login_session['email']
+    # print movieCreator
+    if 'username' not in login_session:
+        return render_template('publicMovie.html', movie=movie)
+    else:
+        # movieCreator = login_session['email']
+        print login_session['email']
+        return render_template('movie.html', movie=movie, movieCreator=login_session['email'])
+    # return jsonify(item=[i.serialize for i in item])    
+
 @app.route('/movie/new/', methods=['GET', 'POST'])
 def newMovie():
     if request.method == 'POST':
