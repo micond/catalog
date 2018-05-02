@@ -8,7 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="/css/style.css">
     <title>My Movie Catalog</title>
 </head>
 
@@ -72,14 +72,21 @@
             
             </div>
             <div class="col">            
-                <div class="list-group">
-                    <a class="list-group-item list-group-item-secondary">Last Movies</a>
+                <a class="list-group-item list-group-item-secondary">Last Movies</a>
+                <div class="card-columns">
                     {% for lastMovie in lastMovies %}
-                        
-                            <a href="{{url_for('movie', movie_title = lastMovie.title)}}" class="list-group-item list-group-item-action">{{lastMovie.title}}</a>                    
-                
+                        <div class="card">
+                            <a href="{{url_for('movie', movie_title = lastMovie.title)}}">
+                            <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{lastMovie.poster_path}}" alt="Card image cap"></a>
+                            <div class="card-body">
+                                <p class="card-title">{{lastMovie.title}}</p>
+                            </div>
+
+                        </div>
+                    
                     {% endfor %}
                 </div>
+                            
             </div>
             </div>
         </div>

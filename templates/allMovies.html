@@ -9,8 +9,40 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
         crossorigin="anonymous">
-
     <title>My Movie Catalog</title>
+    <style>
+        @media (min-width:576px) {
+            .card-columns {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width:768px) {
+            .card-columns {
+                column-count: 3;
+            }
+        }
+
+        @media (min-width:992px) {
+            .card-columns {
+                column-count: 4;
+            }
+        }
+
+        @media (min-width:1200px) {
+            .card-columns {
+                column-count: 5;
+            }
+        }
+
+        .card p {
+            font-size: 0.8em;
+        }
+
+        .card li {
+            font-size: 0.8em;
+        }
+    </style>
 </head>
 
 <body>
@@ -63,43 +95,34 @@
                 <div class="row">
                     <div class="col">
                         <div class="card-columns">
-                         {% for movie in movies %}
+                            <!--<div class="card-columns" style="column-count: 5;">-->
+                            {% for movie in movies %}
 
-                        <div class="card">
-                            <a href="{{url_for('movie', movie_title = movie.title)}}">
-                            <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{movie.poster_path}}" alt="Card image cap"></a>
-                            <div class="card-body">
-                                <h5 class="card-title">{{movie.title}}</h5>
-                                <p class="card-text">{{movie.overview}}</p>
+                            <div class="card">
+                                <a href="{{url_for('movie', movie_title = movie.title)}}">
+                                    <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{movie.poster_path}}" alt="Card image cap">
+                                </a>
+                                <div class="card-body">
+                                    <h6 class="card-title">{{movie.title}}</h6>
+                                    <p class="card-text">{{movie.overview}}</p>
+                                </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Release Date: {{movie.release_date}}</li>
+                                    <li class="list-group-item">Rating: {{movie.vote_average}}</li>
+                                    <li class="list-group-item">Original Language: {{movie.original_language}}</li>
+                                </ul>
+                                {% if 'username' in session %} {% if session['email'] == movie.created_by %}
+                                <div class="card-body">
+                                    <a href="#" class="card-link">Edit</a>
+                                    <a href="#" class="card-link">Delete</a>
+                                </div>
+                                {% endif %} {% endif %}
                             </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Release Date: {{movie.release_date}}</li>
-                                <li class="list-group-item">Rating: {{movie.vote_average}}</li>
-                                <li class="list-group-item">Original Language: {{movie.original_language}}</li>
-                            </ul>
-                             {% if 'username' in session %}
-                             {% if session['email'] == movie.created_by %}
-                            <div class="card-body">
-                                <a href="#" class="card-link">Edit</a>
-                                <a href="#" class="card-link">Delete</a>
-                            </div>
-                             {% endif %} {% endif %}
+                            {% endfor %}
                         </div>
-                         {% endfor %}
-                        </div>  
                     </div>
-                   
                 </div>
             </div>
-
-            <!-- Optional JavaScript -->
-            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-                crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-                crossorigin="anonymous"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-                crossorigin="anonymous"></script>
         </div>
     </body>
 
