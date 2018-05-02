@@ -21,11 +21,11 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
 
 engine = create_engine('sqlite:///mymoviedb.db')
 Base.metadata.bind = engine
@@ -105,7 +105,7 @@ def gconnect():
 
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('/home/michal/udacity/client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets('/home/micond/udacity/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -251,22 +251,22 @@ def lastAddedMovies():
     item = session.query(Movie).order_by(desc(Movie.time_created)).limit(5)
     return jsonify(item=[i.serialize for i in item])
 
-@app.route('/movie/<int:movie_id>')
-def movie(movie_id):
-    movie = session.query(Movie).filter_by(id=movie_id)
+#@app.route('/movie/<int:movie_id>')
+#def movie(movie_id):
+#    movie = session.query(Movie).filter_by(id=movie_id)
     # movieCreator = session.query(Movie).filter_by(id=movie_id).first().created_by
     # movieCreator = login_session['email']
     # print movieCreator
-    if 'username' not in login_session:
-        return render_template('publicMovie.html', movie=movie)
-    else:
+#    if 'username' not in login_session:
+#        return render_template('publicMovie.html', movie=movie)
+#    else:
         # movieCreator = login_session['email']
-        print login_session['email']
-        return render_template('movie.html', movie=movie, movieCreator=login_session['email'])
+#        print login_session['email']
+#        return render_template('movie.html', movie=movie, movieCreator=login_session['email'])
     # return jsonify(item=[i.serialize for i in item])
 
-@app.route('/movietitle/<string:movie_title>')
-def movietitle(movie_title):
+@app.route('/movie/<string:movie_title>')
+def movie(movie_title):
     movie = session.query(Movie).filter_by(title=movie_title)
     # movieCreator = session.query(Movie).filter_by(id=movie_id).first().created_by
     # movieCreator = login_session['email']
@@ -301,10 +301,10 @@ def newCategory():
         return render_template('newCategory.html')
 
 
-@app.route('/movie/<int:movie_id>/edit/',
+@app.route('/movie/<string:movie_title>/edit/',
            methods=['GET', 'POST'])
-def editMovie(movie_id):
-    editedMovie = session.query(Movie).filter_by(id=movie_id).one()
+def editMovie(movie_title):
+    editedMovie = session.query(Movie).filter_by(title=movie_title).one()
     print "EDITMOVIE***********************************",editMovie
     if request.method == 'POST':
         editedMovie.time_updated = time.time()
@@ -337,12 +337,12 @@ def editMovie(movie_id):
         return redirect(url_for('showMovies'))
     else:
         return render_template(
-            'editMovie.html',  movie_id=movie_id, item=editMovie)
+            'editMovie.html',  movie_title=movie_title, item=editMovie)
 
 
-@app.route('/movie/<int:movie_id>/delete',methods=['GET', 'POST'])
-def deleteMovie(movie_id):
-    movieToDelete = session.query(Movie).filter_by(id=movie_id).one()
+@app.route('/movie/<string:movie_title>/delete',methods=['GET', 'POST'])
+def deleteMovie(movie_title):
+    movieToDelete = session.query(Movie).filter_by(title=movie_title).one()
     if request.method == 'POST':
         session.delete(movieToDelete)
         session.commit()

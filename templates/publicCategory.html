@@ -11,7 +11,8 @@
 
 {% for categoryMovie in categoryMovies %}
 
-	<a href = "{{url_for('movie', movie_id = categoryMovie.id)}}"> <p>{{categoryMovie.title}}</p></a>
+	<a href = "{{url_for('movie', movie_title = categoryMovie.title)}}"> <p>{{categoryMovie.title}}</p></a>
+
 
 {% endfor %}
 
