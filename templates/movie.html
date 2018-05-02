@@ -4,15 +4,25 @@
 <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"> -->
 	</head>
 <body>
+    <div class 'login'>
+        {%if 'username' not in session %}
+            <a href="{{url_for('login')}}" class="button-link">Login</a>
+        {% else %}
+             <p>loged as: {{session['email']}}</p>
+             <a href="{{url_for('logout')}}" class="button-link">Logout</a>
+        {% endif %}
+    </div>
 {% for movie in movie %}
 	<h1>{{movie.title}}</h1>
 	<h3>Overview:</h3>
 	<p>{{movie.overview}}</p></a>
 	<p>Created by:{{movie.created_by}}</p></a>	
     {{movieCreator}}
-    {% if movieCreator == movie.created_by %}
+    {% if 'username' in session %}
+        {% if session['email'] == movie.created_by %}
            <p><a href = "{{url_for('editMovie',movie_title = movie.title)}}">Edit Movie</a></p>
            <p><a href = "{{url_for('deleteMovie',movie_title = movie.title)}}">delete Movie</a></p>
+        {% endif %}
     {% endif %}
 
 

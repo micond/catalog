@@ -60,7 +60,7 @@ def getUserID(email):
 
 
 @app.route('/login')
-def showLogin():
+def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -218,18 +218,18 @@ def gdisconnect():
 def showCategories():
     categories = session.query(Category).all()
     lastMovies = session.query(Movie).order_by(desc(Movie.time_created)).limit(5)
-    if 'username' not in login_session:
-        return render_template('publicCategories.html', categories=categories, lastMovies=lastMovies)
-    else:
-        return render_template('categories.html', categories=categories, lastMovies=lastMovies)
+#    if 'username' not in login_session:
+#        return render_template('publicCategories.html', categories=categories, lastMovies=lastMovies)
+#    else:
+    return render_template('categories.html', categories=categories, lastMovies=lastMovies)
 
 @app.route('/movies/')
 def showMovies():
     movies = session.query(Movie).all()
-    if 'username' not in login_session:
-        return render_template('publicAllmovies.html', movies=movies)
-    else:        
-        return render_template('allMovies.html', movies=movies, movieCreator=login_session['email'])
+#    if 'username' not in login_session:
+#        return render_template('publicAllmovies.html', movies=movies)
+#    else:        
+    return render_template('allMovies.html', movies=movies)
 
 @app.route('/category/<string:category_name>/')
 def categorySelect(category_name):
@@ -239,10 +239,10 @@ def categorySelect(category_name):
     # categoryMovies = session.query(Movie).filter_by(category_name=category.name)   
     categoryMovies = session.query(Movie).outerjoin(Category,Movie.category_id == Category.id).filter(Category.name == category_name)
 #    print categoryMovies[0]
-    if 'username' not in login_session:
-        return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
-    else:
-        return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName, movieCreator=login_session['email'])
+#    if 'username' not in login_session:
+#        return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
+#    else:
+    return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
 
     # return jsonify(items=[i.serialize for i in items])
 
@@ -271,12 +271,12 @@ def movie(movie_title):
     # movieCreator = session.query(Movie).filter_by(id=movie_id).first().created_by
     # movieCreator = login_session['email']
     # print movieCreator
-    if 'username' not in login_session:
-        return render_template('publicMovie.html', movie=movie)
-    else:
-        # movieCreator = login_session['email']
-        print login_session['email']
-        return render_template('movie.html', movie=movie, movieCreator=login_session['email'])
+ #   if 'username' not in login_session:
+ #       return render_template('publicMovie.html', movie=movie)
+ #   else:
+#        # movieCreator = login_session['email']
+#        print login_session['email']
+    return render_template('movie.html', movie=movie)
     # return jsonify(item=[i.serialize for i in item])    
 
 @app.route('/movie/new/', methods=['GET', 'POST'])
