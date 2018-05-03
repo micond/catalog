@@ -363,6 +363,17 @@ def searchMovie():
         return render_template('search.html')
 
 
+@app.route('/addMovie/', methods=['POST'])
+def addMovie(searchTitle):
+    if request.method == 'POST':        
+        result = requests.get(
+            'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
+        obj = json.loads(result.content)['results']
+        return render_template('addMovie.html', obj=obj)
+    else:
+        return render_template('search.html')
+
+
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
     app.debug = True

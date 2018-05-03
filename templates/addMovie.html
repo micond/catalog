@@ -47,35 +47,9 @@
                     </ul>
                 </div>
             </nav>
-            <a href="{{url_for('searchMovie')}}" class="btn btn-primary button-width" role="button" aria-pressed="true">New search </a>
-
-            <div class="card-columns">
-                <!--<div class="card-columns" style="column-count: 5;">-->
-                 {% for obj in obj %}
-            
-                <div class="card">
-                    <a href="{{url_for('movie', movie_title = obj.title)}}">
-                        <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{obj.poster_path}}" alt="Card image cap">
-                    </a>
-                    <div class="card-body">
-                        <h6 class="card-title">{{obj.title}}</h6>
-                        <p class="card-text">{{obj.overview}}</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Release Date: {{obj.release_date}}</li>
-                        <li class="list-group-item">Rating: {{obj.vote_average}}</li>
-                        <li class="list-group-item">Original Language: {{obj.original_language}}</li>
-                    </ul>
-                    
-                    <div class="btn-toolbar">
-                        <a href="{{url_for('addMovie',searchTitle = obj.title)}}" class="btn btn-primary button-width-add" role="button" aria-pressed="true">Add</a>
-            
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            
-
+            {% for obj in obj %}
+             <h1>{{obj.title}}</h1>
+            {%endfor%}
         </div>
     </div>
 </body>
