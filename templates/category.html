@@ -67,7 +67,7 @@
                                 <li class="list-group-item">Rating: {{categoryMovie.vote_average}}</li>
                                 <li class="list-group-item">Original Language: {{categoryMovie.original_language}}</li>
                             </ul>
-                             {% if 'username' in session %} {% if session['email'] == movie.created_by %}
+                             {% if 'username' in session %} {% if session['email'] == categoryMovie.created_by %}
                             <div class="btn-toolbar">
                                 <a href="{{url_for('editMovie',movie_title = categoryMovie.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Edit</a>
                             
