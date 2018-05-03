@@ -53,3 +53,15 @@ nav {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.btn-toolbar .btn{
+    margin-right: 5px;
+}
+.btn-toolbar .btn:last-child{
+    margin-right: 0;
+}
+
+.button-width {
+    min-width: 45%;
+    margin: 5px;
+}

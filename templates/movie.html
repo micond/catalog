@@ -1,37 +1,77 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-<!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"> -->
-	</head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
+    <title>My Movie Catalog</title>
+
+</head>
 <body>
-    <div class 'login'>
-        {%if 'username' not in session %}
-            <a href="{{url_for('login')}}" class="button-link">Login</a>
-        {% else %}
-             <p>loged as: {{session['email']}}</p>
-             <a href="{{url_for('logout')}}" class="button-link">Logout</a>
-        {% endif %}
+    <div class="container-fluid">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand">Movie Catalog</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('showCategories')}}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('showMovies')}}">Movies</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-right">
+                        {%if 'username' in session %}
+                        <span class="navbar-text">
+                            logged in as: {{session['email']}}
+                        </span>
+                        {% endif %} {%if 'username' not in session %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('login')}}">Log In</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('logout')}}">Log out</a>
+                        </li>
+                        {%endif%}
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="col">
+                     {% for movie in movie %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{movie.title}}</h5>
+                            <p class="card-text">{{movie.overview}}</p>
+                            <p class="card-text">
+                                <small class="text-muted">Created by: {{movie.created_by}}</small>
+                            </p>
+                        </div>
+                        <img class="card-img-bottom" src="http://image.tmdb.org/t/p/w1280/{{movie.backdrop_path}}" alt="Card image cap">
+                    </div>                    
+                    
+                     {% if 'username' in session %} {% if session['email'] == movie.created_by %}
+                    <div class="btn-toolbar">
+                        <a href="{{url_for('editMovie',movie_title = movie.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Edit</a>
+                    
+                        <a href="{{url_for('deleteMovie',movie_title = movie.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Delete</a>                    
+                    </div>
+                    {% endif %} {% endif %} {% endfor %}                
+                </div>
+            </div>
+        </div>
     </div>
-{% for movie in movie %}
-	<h1>{{movie.title}}</h1>
-	<h3>Overview:</h3>
-	<p>{{movie.overview}}</p></a>
-	<p>Created by:{{movie.created_by}}</p></a>	
-    {{movieCreator}}
-    {% if 'username' in session %}
-        {% if session['email'] == movie.created_by %}
-           <p><a href = "{{url_for('editMovie',movie_title = movie.title)}}">Edit Movie</a></p>
-           <p><a href = "{{url_for('deleteMovie',movie_title = movie.title)}}">delete Movie</a></p>
-        {% endif %}
-    {% endif %}
-
-
-{% endfor %}
-
-
-
-
-
-
 </body>
 </html>

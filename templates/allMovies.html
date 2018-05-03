@@ -14,8 +14,6 @@
 </head>
 
 <body>
-
-    <body>
         <div class="container-fluid">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -79,10 +77,11 @@
                                     <li class="list-group-item">Rating: {{movie.vote_average}}</li>
                                     <li class="list-group-item">Original Language: {{movie.original_language}}</li>
                                 </ul>
-                                {% if 'username' in session %} {% if session['email'] == movie.created_by %}
-                                <div class="card-body">
-                                    <a href="#" class="card-link">Edit</a>
-                                    <a href="#" class="card-link">Delete</a>
+                                 {% if 'username' in session %} {% if session['email'] == movie.created_by %}
+                                <div class="btn-toolbar">
+                                    <a href="{{url_for('editMovie',movie_title = movie.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Edit</a>
+                                
+                                    <a href="{{url_for('deleteMovie',movie_title = movie.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Delete</a>
                                 </div>
                                 {% endif %} {% endif %}
                             </div>
