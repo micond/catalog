@@ -370,11 +370,11 @@ def addMovie(searchTitle):
     result = requests.get(
     'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
     obj = json.loads(result.content)['results']
-    print "after api"obj
+    print "after api",obj
     if request.method == 'POST':                
         return render_template('search.html')
     else:
-        print "return addmovie"obj
+        print "return addmovie",obj
         return render_template('addMovie.html', obj=obj)
 
 
