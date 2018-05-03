@@ -369,8 +369,10 @@ def deleteMovie(movie_title):
 def addMovie(searchTitle):
     result = requests.get(
     'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
+    print "result", result
     obj = json.loads(result.content)['results']
-    print "after api",obj[0]
+    print "obj after api",obj
+    obj = obj[0]
     if request.method == 'POST':                
         return render_template('search.html')
     else:
