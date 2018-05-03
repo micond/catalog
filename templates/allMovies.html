@@ -6,43 +6,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
-        crossorigin="anonymous">
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
     <title>My Movie Catalog</title>
-    <style>
-        @media (min-width:576px) {
-            .card-columns {
-                column-count: 2;
-            }
-        }
-
-        @media (min-width:768px) {
-            .card-columns {
-                column-count: 3;
-            }
-        }
-
-        @media (min-width:992px) {
-            .card-columns {
-                column-count: 4;
-            }
-        }
-
-        @media (min-width:1200px) {
-            .card-columns {
-                column-count: 5;
-            }
-        }
-
-        .card p {
-            font-size: 0.8em;
-        }
-
-        .card li {
-            font-size: 0.8em;
-        }
-    </style>
+   
 </head>
 
 <body>
