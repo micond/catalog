@@ -1,18 +1,83 @@
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
-    </head>
-    <body>
-        <h1>Search and add Movie</h1>
-        <a href = 'http://euve257775.serverprofi24.net:5000/search'>New search </a><br>
-            <a href = 'http://euve257775.serverprofi24.net:5000/'>Home</a>
-            {% for obj in obj %}
-                   <p>{{obj.title}}</p>
-                   <img src= "http://image.tmdb.org/t/p/w185{{obj.poster_path}}">
-                   <br>
-            {% endfor %}
-    
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
+    <title>My Movie Catalog</title>
 
-    </body>
-    </html>
+</head>
 
+<body>
+    <div class="container-fluid">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand">Movie Catalog</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('showCategories')}}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('showMovies')}}">Movies</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-right">
+                        {%if 'username' in session %}
+                        <span class="navbar-text">
+                            logged in as: {{session['email']}}
+                        </span> {% endif %} {%if 'username' not in session %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('login')}}">Log In</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('logout')}}">Log out</a>
+                        </li>
+                        {%endif%}
+                    </ul>
+                </div>
+            </nav>
+            <a href="{{url_for('searchMovie')}}" class="btn btn-primary button-width" role="button" aria-pressed="true">New search </a>
+
+            <div class="card-columns">
+                <!--<div class="card-columns" style="column-count: 5;">-->
+                 {% for obj in obj %}
+            
+                <div class="card">
+                    <a href="{{url_for('movie', movie_title = obj.title)}}">
+                        <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{movie.poster_path}}" alt="Card image cap">
+                    </a>
+                    <div class="card-body">
+                        <h6 class="card-title">{{obj.title}}</h6>
+                        <p class="card-text">{{obj.overview}}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Release Date: {{obj.release_date}}</li>
+                        <li class="list-group-item">Rating: {{obj.vote_average}}</li>
+                        <li class="list-group-item">Original Language: {{obj.original_language}}</li>
+                    </ul>
+                    
+                    <div class="btn-toolbar">
+                        <a href="{{url_for('editMovie',movie_title = obj.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Add</a>
+            
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+
+        </div>
+    </div>
+</body>
+
+</html>
