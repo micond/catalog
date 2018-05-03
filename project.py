@@ -365,10 +365,10 @@ def deleteMovie(movie_title):
     else:
         return render_template('deleteMenuItem.html', item=movieToDelete)
 
-
-@app.route('/addMovie/<string:themoviedb_movie_id>/add', methods=['GET', 'POST'])
-def addMovie(themoviedb_movie_id):
-    result = requests.get('https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US'.format(themoviedb_movie_id, THEMOVIEDB_KEY))
+@app.route('/addMovie/<string:searchTitle>/add', methods=['GET','POST'])
+def addMovie(searchTitle):
+    result = requests.get(
+    'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
     print "result", result
     obj = json.loads(result.content)['results']
     print "obj after api",obj
