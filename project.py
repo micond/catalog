@@ -341,15 +341,7 @@ def editMovie(movie_title):
             'editMovie.html',  movie_title=movie_title, item=editMovie)
 
 
-@app.route('/movie/<string:movie_title>/delete',methods=['GET', 'POST'])
-def deleteMovie(movie_title):
-    movieToDelete = session.query(Movie).filter_by(title=movie_title).one()
-    if request.method == 'POST':
-        session.delete(movieToDelete)
-        session.commit()
-        return redirect(url_for('showMovies'))
-    else:
-        return render_template('deleteMenuItem.html', item=movieToDelete)
+
 
 
 @app.route('/search/', methods=['GET','POST'])
@@ -363,15 +355,25 @@ def searchMovie():
         return render_template('search.html')
 
 
-@app.route('/addMovie/<string:searchTitle>', methods=['GET','POST'])
+@app.route('/movie/<string:movie_title>/delete', methods=['GET', 'POST'])
+def deleteMovie(movie_title):
+    movieToDelete = session.query(Movie).filter_by(title=movie_title).one()
+    if request.method == 'POST':
+        session.delete(movieToDelete)
+        session.commit()
+        return redirect(url_for('showMovies'))
+    else:
+        return render_template('deleteMenuItem.html', item=movieToDelete)
+
+@app.route('/addMovie/<string:searchTitle>/add', methods=['GET','POST'])
 def addMovie(searchTitle):
     if request.method == 'POST':        
         result = requests.get(
             'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
         obj = json.loads(result.content)['results']
-        return render_template('addMovie.html', obj=obj)
-    else:
         return render_template('search.html')
+    else:
+        return render_template('addMovie.html', obj=obj)
 
 
 if __name__ == '__main__':
