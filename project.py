@@ -21,13 +21,13 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
 
-engine = create_engine('sqlite:///mymoviedb.db')
+engine = create_engine('sqlite:///mymoviedb.db', pool_pre_ping=True)
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -106,7 +106,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets(
-            '/home/micond/udacity/client_secrets.json', scope='')
+            '/home/michal/udacity/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -370,14 +370,39 @@ def addMovie(searchTitle):
     result = requests.get(
     'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
     print "result", result
-    obj = json.loads(result.content)['results']
-    print "obj after api",obj
-    obj = obj[0]
-    if request.method == 'POST':                
+    obj = json.loads(result.content)['results'][0]
+    # obj2 = json.dumps(obj[0])
+    # print "obj after api",obj2
+    # obj2 = obj[0]
+    if request.method == 'POST':
+        # print obj['backdrop_path']
+        # for i in obj:
+            # print i
+        movie1 = Movie(
+                    created_by=login_session['email'],                    
+                    time_created=time.time(),
+                    time_updated=time.time(),
+                    backdrop_path=obj['backdrop_path'],                    
+                    themoviedb_movie_id=obj['id'],
+                    original_language=obj['original_language'],
+                    original_title=obj['original_title'],
+                    overview=obj['overview'],
+                    release_date=obj['release_date'],
+                    poster_path=obj['poster_path'],
+                    popularity=obj['popularity'],
+                    title=obj['title'],
+                    video=obj['video'],
+                    vote_average=obj['vote_average'],
+                    vote_count=obj['vote_count'],
+                    category=obj['genre_ids'][0]
+                    )
+        print movie1
+        session.add(movie1)
+        session.commit()                  
         return render_template('search.html')
     else:
-        print "return addmovie",obj
-        return render_template('addMovie.html', obj=obj)
+        # print "return addmovie",obj
+        return render_template('addMovie.html', obj=obj[0])
 
 
 if __name__ == '__main__':
