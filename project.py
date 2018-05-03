@@ -369,7 +369,7 @@ def deleteMovie(movie_title):
 @app.route('/addMovie/<string:themoviedb_movie_id>/add', methods=['GET', 'POST'])
 def addMovie(themoviedb_movie_id):
     result = requests.get(
-        'https: // api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US'.format(themoviedb_movie_id, THEMOVIEDB_KEY))
+        'https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US'.format(themoviedb_movie_id, THEMOVIEDB_KEY))
     print "result", result
     obj = json.loads(result.content)['results']
     print "obj after api",obj
