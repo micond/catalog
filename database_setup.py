@@ -56,7 +56,7 @@ class Movie(Base):
         """Return object data in easily serializeable format"""
         return {
             'id': self.id,
-            'created_by': self.user_id,
+            'created_by': self.created_by,
             'time_created': self.time_created,
             'time_updated': self.time_updated,
             'backdrop_path': self.backdrop_path,      

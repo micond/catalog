@@ -1,32 +1,64 @@
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
-    </head>
-    <body>
-        <a href = 'http://euve257775.serverprofi24.net:5000/'>Home</a>
-    <div class 'login'>
-          {% if 'username' not in session %}
-               <a href="{{url_for('login')}}" class="button-link">Login</a>
-          {% else %}
-               <p>loged as: {{session['email']}}</p>
-               <a href="{{url_for('logout')}}" class="button-link">Logout</a>
-          {% endif %}
-    </div>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <h1>Search and add Movie</h1>
-        {% if 'username'not  in session %}
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
+    <title>My Movie Catalog</title>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand">Movie Catalog</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('showCategories')}}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('showMovies')}}">Movies</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-right">
+                        {%if 'username' in session %}
+                        <span class="navbar-text">
+                            logged in as: {{session['email']}}
+                        </span> {% endif %} {%if 'username' not in session %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('login')}}">Log In</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('logout')}}">Log out</a>
+                        </li>
+                        {%endif%}
+                    </ul>
+                </div>
+            </nav>
+            <h2>Search and add Movie</h2>
+            {% if 'username'not in session %}
             <p>You are not loged in</p>
-        {% else %}
-                <form action="#" method = 'post'>
+            {% else %}
+            <form class="form-inline" action="#" method='post'>
+                <input class="form-control mr-sm-2" type="text" size='30' placeholder="Find your Movie" aria-label="Search" name='title'>
+                <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value='Search'>
+            </form>
+             {% endif %}                   
 
-                      <p>Search Title:</p>
-                      <input type ='text' size='30' name='title'>
-                      <br><br>
+        </div>
+    </div>
+</body>
 
-                      <input type='submit' value='Search'>
-
-                </form>
-        {% endif %}
-
-    </body>
-    </html>
-
+</html>
