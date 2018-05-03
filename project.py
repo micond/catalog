@@ -367,13 +367,14 @@ def deleteMovie(movie_title):
 
 @app.route('/addMovie/<string:searchTitle>/add', methods=['GET','POST'])
 def addMovie(searchTitle):
+    movieToAdd = session.query(Movie).filter_by(title=searchTitle).one()
     if request.method == 'POST':        
         result = requests.get(
             'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
         obj = json.loads(result.content)['results']
         return render_template('search.html')
     else:
-        return render_template('addMovie.html', obj=obj)
+        return render_template('addMovie.html', obj=movieToAdd)
 
 
 if __name__ == '__main__':
