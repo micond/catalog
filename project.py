@@ -21,13 +21,13 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('/home/michal/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
 
-engine = create_engine('sqlite:///mymoviedb.db', pool_pre_ping=True)
+engine = create_engine('sqlite:///mymoviedb.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -106,7 +106,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets(
-            '/home/michal/udacity/client_secrets.json', scope='')
+            '/home/micon/udacity/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -365,20 +365,49 @@ def deleteMovie(movie_title):
     else:
         return render_template('deleteMenuItem.html', item=movieToDelete)
 
-@app.route('/addMovie/<string:searchTitle>/add', methods=['GET','POST'])
-def addMovie(searchTitle):
-    result = requests.get(
-    'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
+#@app.route('/addMovie/<string:searchTitle>/add', methods=['GET','POST'])
+#def addMovie(searchTitle):
+#    result = requests.get(
+#    'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
+#    print "result", result
+#    obj = json.loads(result.content)['results'][0]
+#    if request.method == 'POST':
+#        movie1 = Movie(
+#                    created_by=login_session['email'],                    
+#                    time_created=time.time(),
+#                    time_updated=time.time(),
+#                    backdrop_path=obj['backdrop_path'],                    
+#                    themoviedb_movie_id=obj['id'],
+#                    original_language=obj['original_language'],
+#                    original_title=obj['original_title'],
+#                    overview=obj['overview'],
+#                    release_date=obj['release_date'],
+#                    poster_path=obj['poster_path'],
+#                    popularity=obj['popularity'],
+#                    title=obj['title'],
+#                    video=obj['video'],
+#                    vote_average=obj['vote_average'],
+#                    vote_count=obj['vote_count'],                    
+#                    )
+#        print movie1
+#        session.add(movie1)
+#        session.commit()                  
+#        return render_template('search.html')
+#    else:
+#        return render_template('addMovie.html', obj=obj)
+
+@app.route('/addMovie/<string:searchTitle>/<int:tmvdb_id>/add', methods=['GET','POST'])
+def addMovie(searchTitle,tmvdb_id):
+    result = requests.get('https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US&query={1}&page=1&include_adult=false'.format(tmvdb_id,THEMOVIEDB_KEY))
     print "result", result
-    obj = json.loads(result.content)['results'][0]
-    # obj2 = json.dumps(obj[0])
-    # print "obj after api",obj2
-    # obj2 = obj[0]
+    obj = json.loads(result.content)
     if request.method == 'POST':
-        # print obj['backdrop_path']
-        # for i in obj:
-            # print i
-        movie1 = Movie(
+        checkDuplicity = session.query(Movie.themoviedb_movie_id).filter_by(themoviedb_movie_id=tmvdb_id).all()
+        print "tmvdb_id:********************",tmvdb_id
+        print "check duplicity********************",checkDuplicity
+        if not checkDuplicity:
+            print "not in ##########################"
+            movie1 = Movie(
                     created_by=login_session['email'],                    
                     time_created=time.time(),
                     time_updated=time.time(),
@@ -393,16 +422,18 @@ def addMovie(searchTitle):
                     title=obj['title'],
                     video=obj['video'],
                     vote_average=obj['vote_average'],
-                    vote_count=obj['vote_count'],
-                    category=obj['genre_ids'][0]
+                    vote_count=obj['vote_count'],                    
                     )
-        print movie1
-        session.add(movie1)
-        session.commit()                  
-        return render_template('search.html')
+            print movie1
+            session.add(movie1)
+            session.commit()                  
+            return movie(obj['title'])
+        else:
+            print "in ###################33#############"
+            return redirect(url_for('searchMovie'))
     else:
-        # print "return addmovie",obj
-        return render_template('addMovie.html', obj=obj[0])
+        return render_template('addMovie.html', obj=obj)
+
 
 
 if __name__ == '__main__':
