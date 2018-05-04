@@ -106,7 +106,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets(
-            '/home/micon/udacity/client_secrets.json', scope='')
+            '/home/micond/udacity/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -365,40 +365,9 @@ def deleteMovie(movie_title):
     else:
         return render_template('deleteMenuItem.html', item=movieToDelete)
 
-#@app.route('/addMovie/<string:searchTitle>/add', methods=['GET','POST'])
-#def addMovie(searchTitle):
-#    result = requests.get(
-#    'https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
-#    print "result", result
-#    obj = json.loads(result.content)['results'][0]
-#    if request.method == 'POST':
-#        movie1 = Movie(
-#                    created_by=login_session['email'],                    
-#                    time_created=time.time(),
-#                    time_updated=time.time(),
-#                    backdrop_path=obj['backdrop_path'],                    
-#                    themoviedb_movie_id=obj['id'],
-#                    original_language=obj['original_language'],
-#                    original_title=obj['original_title'],
-#                    overview=obj['overview'],
-#                    release_date=obj['release_date'],
-#                    poster_path=obj['poster_path'],
-#                    popularity=obj['popularity'],
-#                    title=obj['title'],
-#                    video=obj['video'],
-#                    vote_average=obj['vote_average'],
-#                    vote_count=obj['vote_count'],                    
-#                    )
-#        print movie1
-#        session.add(movie1)
-#        session.commit()                  
-#        return render_template('search.html')
-#    else:
-#        return render_template('addMovie.html', obj=obj)
-
 @app.route('/addMovie/<string:searchTitle>/<int:tmvdb_id>/add', methods=['GET','POST'])
 def addMovie(searchTitle,tmvdb_id):
-    result = requests.get('https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US&query={1}&page=1&include_adult=false'.format(tmvdb_id,THEMOVIEDB_KEY))
+    result = requests.get('https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US'.format(tmvdb_id,THEMOVIEDB_KEY))
     print "result", result
     obj = json.loads(result.content)
     if request.method == 'POST':
@@ -407,6 +376,9 @@ def addMovie(searchTitle,tmvdb_id):
         print "check duplicity********************",checkDuplicity
         if not checkDuplicity:
             print "not in ##########################"
+            genres_exists = session.query(Genre.movie_id).filter_by(
+                movie_id=obj['id']).all()
+            print "genres_exists",genres_exists
             movie1 = Movie(
                     created_by=login_session['email'],                    
                     time_created=time.time(),
@@ -422,11 +394,26 @@ def addMovie(searchTitle,tmvdb_id):
                     title=obj['title'],
                     video=obj['video'],
                     vote_average=obj['vote_average'],
-                    vote_count=obj['vote_count'],                    
+                    vote_count=obj['vote_count'],
+                    #category=obj['genres'][0]['id']                 
                     )
-            print movie1
+            print "movie1",movie1
             session.add(movie1)
-            session.commit()                  
+            session.commit()        
+            print "obj['genres'][0]['id']", obj['genres'][0]['id']
+            for y in obj['genres']:
+                print y
+
+            if not genres_exists:
+                if obj['genres']:
+                    for y in obj['genres']:
+                        genre1 = Genre(
+                            movie_id=obj['id'],
+                            genre_id=y['id'],
+                            title=obj['title'],                            
+                        )
+                        session.add(genre1)
+                        session.commit()           
             return movie(obj['title'])
         else:
             print "in ###################33#############"
