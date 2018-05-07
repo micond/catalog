@@ -52,8 +52,8 @@
             <div class="row">
                 <div class="col">
                     <h1>{{categoryName.name}} Movies:</h1>
-                    <div class='card-columns'>                
-                       {% for categoryMovie in categoryMovies %}
+                    <div class='card-columns'>
+                        {% for categoryMovie in categoryMovies %}
                         <div class="card">
                             <a href="{{url_for('movie', movie_title = categoryMovie.title)}}">
                                 <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{categoryMovie.poster_path}}" alt="Card image cap">
@@ -67,16 +67,17 @@
                                 <li class="list-group-item">Rating: {{categoryMovie.vote_average}}</li>
                                 <li class="list-group-item">Original Language: {{categoryMovie.original_language}}</li>
                             </ul>
-                             {% if 'username' in session %} {% if session['email'] == categoryMovie.created_by %}
+                            {% if 'username' in session %} {% if session['email'] == categoryMovie.created_by %}
                             <div class="btn-toolbar">
                                 <a href="{{url_for('editMovie',movie_title = categoryMovie.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Edit</a>
-                            
-                                <a href="{{url_for('deleteMovie',movie_title = categoryMovie.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Delete</a>
+
+                                <a href="{{url_for('deleteMovie',movie_title = categoryMovie.title)}}" class="btn btn-primary button-width" role="button"
+                                    aria-pressed="true">Delete</a>
                             </div>
-                             {% endif %} {% endif %}
+                            {% endif %} {% endif %}
                         </div>
-                        {% endfor %}            
-                    
+                        {% endfor %}
+
                     </div>
                 </div>
             </div>

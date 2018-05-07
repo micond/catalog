@@ -14,91 +14,83 @@
 </head>
 
 <body>
-
-    <body>
-        <div class= "container-fluid">
-            <div class="container">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <a class="navbar-brand">Movie Catalog</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarText">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{{url_for('showCategories')}}">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{url_for('showMovies')}}">Movies</a>
-                            </li>                            
-                        </ul>
-                        <ul class="navbar-nav navbar-right">
-                             {%if 'username' in session %}
+    <div class="container-fluid">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand">Movie Catalog</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('showCategories')}}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('showMovies')}}">Movies</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-right">
+                        {%if 'username' in session %}
                         <span class="navbar-text">
                             logged in as: {{session['email']}}
                         </span>
-                            {% endif %}
-                            {%if 'username' not in session %}
+                        {% endif %} {%if 'username' not in session %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{url_for('login')}}">Log In</a>
                         </li>
-                             {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{url_for('logout')}}">Log out</a>
-                            </li>
-                            {%endif%}
-                        </ul>
-                    </div>
-                </nav>
-        {%if 'username' in session %}
-        <div class="row">
-            <div class="col"> 
-                <a class="btn btn-primary" href="{{url_for('newCategory')}}" role="button">Add new Category</a>
-            </div>
-            <div class="col">
-                <a class="btn btn-primary" href="{{url_for('searchMovie')}}" role="button">Add new Movie</a>
-            </div>
-        </div>
-        {% endif %}
-        <div class="row">
-            <div class="col">
-                <div class="list-group">
-                    <a class="list-group-item list-group-item-secondary">Movie Categories</a>
-                    {% for category in categories %}
-
-                    <a href="{{url_for('categorySelect', category_name = category.name)}}" class="list-group-item list-group-item-action">{{category.name}}</a>     
-                     {% endfor %}
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('logout')}}">Log out</a>
+                        </li>
+                        {%endif%}
+                    </ul>
                 </div>
-            
+            </nav>
+            {%if 'username' in session %}
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-primary" href="{{url_for('newCategory')}}" role="button">Add new Category</a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-primary" href="{{url_for('searchMovie')}}" role="button">Add new Movie</a>
+                </div>
             </div>
-            <div class="col">            
-                <a class="list-group-item list-group-item-secondary">Last Movies</a>
-                <div class="main-cards">
-                    <div class="card-columns">
-                        {% for lastMovie in lastMovies %}
+            {% endif %}
+            <div class="row">
+                <div class="col">
+                    <div class="list-group">
+                        <a class="list-group-item list-group-item-secondary">Movie Categories</a>
+                        {% for category in categories %}
+
+                        <a href="{{url_for('categorySelect', category_name = category.name)}}" class="list-group-item list-group-item-action">{{category.name}}</a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <div class="col">
+                    <a class="list-group-item list-group-item-secondary">Last Movies</a>
+                    <div class="main-cards">
+                        <div class="card-columns">
+                            {% for lastMovie in lastMovies %}
                             <div class="card">
                                 <a href="{{url_for('movie', movie_title = lastMovie.title)}}">
-                                <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{lastMovie.poster_path}}" alt="Card image cap"></a>
+                                    <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{lastMovie.poster_path}}" alt="Card image cap">
+                                </a>
                                 <div class="card-body">
                                     <p class="card-title">{{lastMovie.title}}</p>
                                 </div>
 
                             </div>
-                        
-                        {% endfor %}
+
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
         </div>
-
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     </div>
-    </body>
+</body>
 
 </html>

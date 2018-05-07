@@ -1,19 +1,65 @@
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
-<!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"> -->
-	</head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
+	<title>My Movie Catalog</title>
+
+</head>
 
 <body>
-<h1> Are you sure you want to delete movie: {{item.title}} from database? </h1>
+	<div class="container-fluid">
+		<div class="container">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<a class="navbar-brand">Movie Catalog</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+				    aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarText">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="{{url_for('showCategories')}}">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{url_for('showMovies')}}">Movies</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav navbar-right">
+						{%if 'username' in session %}
+						<span class="navbar-text">
+							logged in as: {{session['email']}}
+						</span>
+						{% endif %} {%if 'username' not in session %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{url_for('login')}}">Log In</a>
+						</li>
+						{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{url_for('logout')}}">Log out</a>
+						</li>
+						{%endif%}
+					</ul>
+				</div>
+			</nav>
 
-<form action="#" method = 'post'>
-
-<input type='submit', value = 'Delete'>
-
-
-</form>
-
-<a href = "{{url_for('showCategories')}}"> Cancel </a>
+			<div class="row">
+				<div class="col">
+					<h1> Are you sure you want to delete movie: {{item.title}} from database? </h1>
+					<form action="#" method='post'>
+						<input type='submit' , value='Delete'>
+					</form>
+					<a href="{{url_for('showCategories')}}"> Cancel </a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
