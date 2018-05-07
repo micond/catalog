@@ -238,11 +238,13 @@ def categorySelect(category_name):
     print (categoryName)
     category = session.query(Category).filter_by(name=category_name).one()
     # categoryMovies = session.query(Movie).filter_by(category_name=category.name)   
-    categoryMovies = session.query(Movie).outerjoin(Category,Movie.category_id == Category.id).filter(Category.name == category_name)
+#    categoryMovies = session.query(Movie).outerjoin(Category,Movie.category_id == Category.id).filter(Category.name == category_name)
 #    print categoryMovies[0]
 #    if 'username' not in login_session:
 #        return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
 #    else:
+    categoryMovies = session.query(Movie).outerjoin(
+                    Genre, Movie.themoviedb_movie_id == Genre.movie_id).filter(Genre.genre_id == category.themoviedb_genre_id)
     return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
 
     # return jsonify(items=[i.serialize for i in items])
@@ -413,7 +415,21 @@ def addMovie(searchTitle,tmvdb_id):
                             title=obj['title'],                            
                         )
                         session.add(genre1)
-                        session.commit()           
+                        session.commit()          
+
+            for i in obj['genres']:
+                q = session.query(Category).filter(Category.themoviedb_genre_id == i['id'])
+                checkDuplicity2 = session.query(Category.themoviedb_genre_id).filter_by(themoviedb_genre_id=i['id']).all()
+                print "++++++++++++++++++++++++++++++++ i + q",i, q
+                if not checkDuplicity2:
+                    category1 = Category(name = i['name'],
+                                         themoviedb_genre_id = i['id'],
+                                         created_by = login_session['email'],
+                                         )
+                    session.add(category1)
+                    session.commit()
+                    print "new category added:", i['name']
+
             return movie(obj['title'])
         else:
             print "in ###################33#############"
