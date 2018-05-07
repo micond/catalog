@@ -1,3 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
+	<title>My Movie Catalog</title>
+
+</head>
+
+<body>
+	<div class="container-fluid">
+		<div class="container">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<a class="navbar-brand">Movie Catalog</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+				 aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarText">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="{{url_for('showCategories')}}">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{url_for('showMovies')}}">Movies</a>
+						</li>
+					</ul>
+					<ul class="navbar-nav navbar-right">
+						{%if 'username' in session %}
+						<span class="navbar-text">
+							logged in as: {{session['email']}}
+						</span>
+						{% endif %} {%if 'username' not in session %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{url_for('login')}}">Log In</a>
+						</li>
+						{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{url_for('logout')}}">Log out</a>
+						</li>
+						{%endif%}
+					</ul>
+				</div>
+			</nav>
+
+			<div class="row">
+				<div class="col">
+					<h1> Edit Movie Item </h1>
+					
+					<form action="#" method='post'>
+					
+					
+						<p>backdrop_path:</p>
+						<input type='text' size='30' name='backdrop_path' placeholder='{{item.backdrop_path}}'>
+						<p>themoviedb_movie_id:</p>
+						<input type='text' size='30' name='themoviedb_movie_id' placeholder='{{item.themoviedb_movie_id}}'>
+						<p>original_title:</p>
+						<input type='text' size='30' name='original_title' placeholder='{{item.original_title }}'>
+						<p>overview:</p>
+						<input type='text' size='30' name='overview' placeholder='{{item.overview}}'>
+						<p>release_date:</p>
+						<input type='text' size='30' name='release_date' placeholder='{{item.release_date}}'>
+						<p>poster_path:</p>
+						<input type='text' size='30' name='poster_path' placeholder='{{item.poster_path }}'>
+						<p>popularity:</p>
+						<input type='text' size='30' name='popularity' placeholder='{{item.popularity}}'>
+						<p>title:</p>
+						<input type='text' size='30' name='title' placeholder='{{item.title}}'>
+						<p>video:</p>
+						<input type='text' size='30' name='video' placeholder='{{item.video}}'>
+						<p>vote_average:</p>
+						<input type='text' size='30' name='vote_average' placeholder='{{item.vote_average }}'>
+						<p>vote_count:</p>
+						<input type='text' size='30' name='vote_count' placeholder='{{item.vote_count}}'>
+						<p>category_id:</p>
+						<input type='text' size='30' name='category_id' placeholder='{{item.category_id}}'>
+					
+					
+					
+						<input class="btn btn-primary button-width" role="button" type='submit' value='Edit'>
+					
+					
+						<a href="{{url_for('showCategories')}}" class="btn btn-primary button-width" role="button"> Cancel </a>
+					
+					
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
+
 <html>
 
 <head>
