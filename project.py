@@ -307,45 +307,45 @@ def newCategory():
 @app.route('/movie/<string:movie_title>/edit/',
            methods=['GET', 'POST'])
 def editMovie(movie_title):
-    editedMovie = session.query(Movie).filter_by(title=movie_title).all()
+    editedMovie = session.query(Movie).filter_by(title=movie_title).one()
 #    resulte = json.load(editedMovie)
-    print "EDITMOVIE***********************************",editedMovie[0].title
-    result = editedMovie[0]
-    for u in editedMovie:
-        print u.title
+    print "EDITMOVIE***********************************",editedMovie.title
+#    editedMovie = editedMovie[0]
     if request.method == 'POST':
         print "edit movie POST"
-        editedMovie.time_updated = time.time()
         if request.form['backdrop_path']:
+            print "path"
             editedMovie.backdrop_path = request.form['backdrop_path']
-        if request.form['themoviedb_movie_id']:
-            editedMovie.themoviedb_movie_id = request.form['themoviedb_movie_id']
         if request.form['original_title']:
+            print "title"
             editedMovie.original_title = request.form['original_title']
         if request.form['overview']:
+            print "overview"
             editedMovie.overview = request.form['overview']
         if request.form['release_date']:
+            print "release date"
             editedMovie.release_date = request.form['release_date']
         if request.form['poster_path']:
+            print "path"
             editedMovie.poster_path = request.form['poster_path']
         if request.form['popularity']:
+            print "popularity"
             editedMovie.popularity = request.form['popularity']
-        if request.form['title']:
-            editedMovie.title = request.form['title']
         if request.form['video']:
+            print "video"
             editedMovie.video = request.form['video']
         if request.form['vote_average']:
+            print "vote avarage"
             editedMovie.vote_average = request.form['vote_average']
         if request.form['vote_count']:
+            print "vote count"
             editedMovie.vote_count = request.form['vote_count']
-        if request.form['category_id']:
-            editedMovie.category_id = request.form['category_id']
         session.add(editedMovie)
         session.commit()
-        return redirect(url_for('showMovies'))
+        return movie(editedMovie.title)
     else:
         return render_template(
-            'editMovie.html',  movie_title=movie_title, item=result)
+            'editMovie.html',  movie_title=movie_title, item=editedMovie)
 
 
 
