@@ -308,8 +308,8 @@ def newCategory():
            methods=['GET', 'POST'])
 def editMovie(movie_title):
     editedMovie = session.query(Movie).filter_by(title=movie_title).one()
-    editedMovie = json.loads(editedMovie.content)
-    print "EDITMOVIE***********************************",editMovie, editMovie['title']
+    result = json.dumps(editedMovie)
+    print "EDITMOVIE***********************************",editMovie, editMovie['title'], result
     if request.method == 'POST':
         editedMovie.time_updated = time.time()
         if request.form['backdrop_path']:
