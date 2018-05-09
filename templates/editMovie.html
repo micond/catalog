@@ -53,8 +53,8 @@
 				<div class="col">
 					<h1> Edit Movie Item </h1>
 
-					<form action="#" method='post'>
-						 {{item.backdrop_path}}
+					<form action="{{ url_for('editMovie',movie_title = movie.title)}}" method='post'>
+						<p>Backdrop Path:</p>
 						<input class="form-control mr-sm-2" type="text" size='30' placeholder="{{item.backdrop_path}}" aria-label="Search" name='backdrop_path'>
 						<p>themoviedb_movie_id:</p>
 						<input type='text' size='30' name='themoviedb_movie_id' placeholder='{{item.themoviedb_movie_id}}'>
