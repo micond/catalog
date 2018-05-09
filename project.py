@@ -307,9 +307,14 @@ def newCategory():
 @app.route('/movie/<string:movie_title>/edit/',
            methods=['GET', 'POST'])
 def editMovie(movie_title):
-    editedMovie = session.query(Movie).filter_by(title=movie_title).one()
-    print "EDITMOVIE***********************************",editMovie, editMovie['title']
+    editedMovie = session.query(Movie).filter_by(title=movie_title).all()
+#    resulte = json.load(editedMovie)
+    print "EDITMOVIE***********************************",editedMovie[0].title
+    result = editedMovie[0]
+    for u in editedMovie:
+        print u.title
     if request.method == 'POST':
+        print "edit movie POST"
         editedMovie.time_updated = time.time()
         if request.form['backdrop_path']:
             editedMovie.backdrop_path = request.form['backdrop_path']
@@ -340,7 +345,7 @@ def editMovie(movie_title):
         return redirect(url_for('showMovies'))
     else:
         return render_template(
-            'editMovie.html',  movie_title=movie_title, item=editMovie)
+            'editMovie.html',  movie_title=movie_title, item=result)
 
 
 
