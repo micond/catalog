@@ -307,9 +307,8 @@ def newCategory():
 @app.route('/movie/<string:movie_title>/edit/',
            methods=['GET', 'POST'])
 def editMovie(movie_title):
-    editedMovie = session.query(Movie).filter(Movie.title=movie_title)
+    editedMovie = session.query(Movie).filter_by(title=movie_title).one()
     print "EDITMOVIE***********************************",editMovie, editMovie['title']
-    print "eidit movie editMovie.title:", editMovie.title
     if request.method == 'POST':
         editedMovie.time_updated = time.time()
         if request.form['backdrop_path']:
