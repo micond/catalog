@@ -308,6 +308,7 @@ def newCategory():
            methods=['GET', 'POST'])
 def editMovie(movie_title):
     editedMovie = session.query(Movie).filter_by(title=movie_title).one()
+    editedMovie = json.loads(editedMovie.content)
     print "EDITMOVIE***********************************",editMovie, editMovie['title']
     if request.method == 'POST':
         editedMovie.time_updated = time.time()
