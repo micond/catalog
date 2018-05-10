@@ -21,11 +21,11 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/mo034u/Documents/Udacity_mint/client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('/home/mo034u/Documents/Udacity_mint/client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
 
 engine = create_engine('sqlite:///mymoviedb.db')
 Base.metadata.bind = engine
@@ -104,22 +104,18 @@ def fbconnect():
     access_token = request.data
     print "access token received %s " % access_token
     # 3 Gets info from fb clients secrets
-    app_id = json.loads(open('/home/mo034u/Documents/Udacity_mint/client_secrets.json', 'r').read())[
+    app_id = json.loads(open('/home/micond/udacity/client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
-        open('/home/mo034u/Documents/Udacity_mint/client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?' \
-          'grant_type=fb_exchange_token&client_id=%s&' \
-          'client_secret=%s&fb_exchange_token=%s' % (
-              app_id, app_secret, access_token)
+        open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['app_secret']
+    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id={0}&client_secret={1}&fb_exchange_token={2}'.format(app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     # 4 Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.8/me"
     token = result.split(',')[0].split(':')[1].replace('"', '')
 
-    url = 'https://graph.facebook.com/v2.8/me?' \
-          'access_token=%s&fields=name,id,email' % token
+    url = 'https://graph.facebook.com/v2.8/me?access_token={0}&fields=name,id,email'.format(token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     # print "url sent for API access:%s"% url
@@ -133,9 +129,7 @@ def fbconnect():
     # The token must be stored in the login_session in order to properly logout
     login_session['access_token'] = token
     # Get user picture
-    url = 'https://graph.facebook.com/v2.8/me/picture?' \
-          'access_token=%s&redirect=0&' \
-          'height=200&width=200' % token
+    url = 'https://graph.facebook.com/v2.8/me/picture?access_token={0}&redirect=0&height=200&width=200'.format(token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -155,7 +149,7 @@ def fbconnect():
     output += ' " style = "width: 200px; height: 200px;border-radius:' \
         ' 150px;-webkit-border-radius: 150px;' \
         ' -moz-border-radius: 150px;"> '
-    flash("Now logged in as %s" % login_session['username'])
+    flash("Now logged in as {0}".format(login_session['username']))
     return output
 
 
@@ -164,8 +158,7 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (
-        facebook_id, access_token)
+    url = 'https://graph.facebook.com/{0}/permissions?access_token={1}'.format(facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
@@ -184,7 +177,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets(
-            '/home/mo034u/Documents/Udacity_mint/client_secrets.json', scope='')
+            '/home/micond/udacity/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -195,8 +188,7 @@ def gconnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
-           % access_token)
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={0}'.format(access_token))
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
     # If there was an error in the access token info, abort.
@@ -259,7 +251,7 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
+    flash("you are now logged in as {0}".format(login_session['username']))
     print "done!"
     return output
 
