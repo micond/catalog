@@ -109,7 +109,7 @@
                             $('#result').html('Login Successful!</br>' + result +
                                 '</br>Redirecting...')
                             setTimeout(function () {
-                                window.location.href = "/";
+                                window.location.href = "/categories";
                             }, 4000);
 
                         } else {
@@ -162,7 +162,7 @@
 
             <p> You are already logged in</p>
 
-            {% endif %} {%if 'username' not in session %} {% endif %}
+            {% endif %} {%if 'username' not in session %}
             <div class="row">
                 <div class="col">
                     <div class="card">
@@ -184,37 +184,18 @@
                                 <div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="true"
                                     data-use-continue-as="false" scope="public_profile,email" onlogin="sendTokenToServer();"></div>
                                 <!--END FACEBOOK SIGN IN -->
-                                <button>
-
-
-                                    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
-                                        <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-
-                                    </fb:login-button>
-
-
-                                </button>
 
                             </p>
 
                         </article>
                     </div>
-
+                    {% endif %}
                     <div id="result"></div>
 
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
 
 </body>
 
