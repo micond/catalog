@@ -125,7 +125,7 @@ def fbconnect():
     login_session['username'] = data["name"]
     login_session['email'] = data["email"]
     login_session['facebook_id'] = data["id"]
-    print "login_session['facebook_id'] = data["id"]:",login_session['facebook_id']
+    print "login_session['facebook_id'] = data['id']:",login_session['facebook_id']
 
     # The token must be stored in the login_session in order to properly logout
     login_session['access_token'] = token
