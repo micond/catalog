@@ -114,13 +114,15 @@ def fbconnect():
     # 4 Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.8/me"
     token = result.split(',')[0].split(':')[1].replace('"', '')
-
+    print "token", token
     url = 'https://graph.facebook.com/v2.8/me?access_token={0}&fields=name,id,email'.format(token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
+    print "result", result
     # print "url sent for API access:%s"% url
     # print "API JSON result: %s" % result
     data = json.loads(result)
+    print "data", data
     login_session['provider'] = 'facebook'
     login_session['username'] = data["name"]
     login_session['email'] = data["email"]
@@ -156,7 +158,6 @@ def fbconnect():
 
 @app.route('/fbdisconnect')
 def fbdisconnect():
-    print "login session fb id:", login_session['facebook_id']
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
