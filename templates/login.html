@@ -9,10 +9,10 @@
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css.map') }}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
-    <script type="text/javascript" src="{{url_for('static', filename='fb.js')}}"></script>
+    <!-- <script type="text/javascript" src="{{url_for('static', filename='fb.js')}}"></script> -->
     <title>My Movie Catalog</title>
     <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
-    
+
     <script>
         function signInCallback(authResult) {
             if (authResult['code']) {
@@ -54,54 +54,75 @@
 </head>
 
 <body>
-<script>
-window.fbAsyncInit = function() {
-    console.log('youpiii');
-    FB.init({
-        appId: '184032105530493',
-        cookie: true,
-        xfbml: true,
-        version: 'v3.0'
-    });
-    console.log("fakt neviem preco")
-    FB.AppEvents.logPageView();
-    console.log("fakt neviem preco")
-};
-</script>
-
-<div id="fb-root"></div>
-
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.0&appId=184032105530493&autoLogAppEvents=1';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-function checkLoginState() {
-    console.log('test2');
-    FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-    });
-}
-
-</script>
-<!-- 
-<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            console.log('youpiii');
+            FB.init({
+                appId: '184032105530493',
+                cookie: true,
+                xfbml: true,
+                version: 'v3.0'
+            });
+            console.log("fakt neviem preco")
+            FB.AppEvents.logPageView();
+            console.log("fakt neviem preco")
+        };
+    </script>
 
 
+    <div id="fb-root"></div>
 
-<button>
-<fb:login-button 
-  scope="public_profile,email"
-  onlogin="checkLoginState();">
-</fb:login-button>
-</button>
-<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div> -->
+    <script>
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src =
+                'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.0&appId=184032105530493&autoLogAppEvents=1';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function checkLoginState() {
+            console.log('test2');
+            FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        }
 
 
+        function sendTokenToServer() {
+            var access_token = FB.getAuthResponse()['accessToken'];
+            console.log(access_token)
+            console.log('Welcome!  Fetching your information.... ');
+            FB.api('/me', function (response) {
+                console.log('Successful login for: ' + response.name);
+                $.ajax({
+                    type: 'POST',
+                    url: '/fbconnect?state={{STATE}}',
+                    processData: false,
+                    data: access_token,
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    success: function (result) {
+                        // Handle or verify the server response if necessary.
+                        if (result) {
+                            $('#result').html('Login Successful!</br>' + result +
+                                '</br>Redirecting...')
+                            setTimeout(function () {
+                                window.location.href = "/";
+                            }, 4000);
 
+                        } else {
+                            $('#result').html(
+                                'Failed to make a server-side call. Check your configuration and console.'
+                            );
+                        }
+                    }
+
+                });
+            });
+        }
+    </script>
 
     <div class="container-fluid">
         <div class="container">
@@ -149,7 +170,7 @@ function checkLoginState() {
 
                             <h4 class="card-title mb-4 mt-1">Sign in</h4>
                             <p>
-                            <!-- GOOGLE PLUS SIGN IN-->
+                                <!-- GOOGLE PLUS SIGN IN-->
                                 <div id="signinButton">
                                     <span class="g-signin" data-scope="openid email" data-clientid="903613041823-kvrmcl49lasccshsvq0f041v80f3ephd.apps.googleusercontent.com"
                                         data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin"
@@ -157,11 +178,22 @@ function checkLoginState() {
                                     </span>
                                 </div>
                                 <!--END GOOGLE PLUS SIGN IN -->
-                                
+
                                 <!--FACEBOOK SIGN IN -->
 
-                                <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                                <div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="true"
+                                    data-use-continue-as="false" scope="public_profile,email" onlogin="sendTokenToServer();"></div>
                                 <!--END FACEBOOK SIGN IN -->
+                                <button>
+
+
+                                    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+                                        <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+
+                                    </fb:login-button>
+
+
+                                </button>
 
                             </p>
 
@@ -174,15 +206,15 @@ function checkLoginState() {
             </div>
         </div>
     </div>
-    
 
 
 
 
-    
 
-    
-    
+
+
+
+
 
 </body>
 
