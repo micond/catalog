@@ -125,6 +125,7 @@ def fbconnect():
     login_session['username'] = data["name"]
     login_session['email'] = data["email"]
     login_session['facebook_id'] = data["id"]
+    print "login_session['facebook_id'] = data["id"]:",login_session['facebook_id']
 
     # The token must be stored in the login_session in order to properly logout
     login_session['access_token'] = token
@@ -146,7 +147,7 @@ def fbconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 200px; height: 200px;border-radius:' \
+    output += ' "style = "width: 200px; height: 200px;border-radius:' \
         ' 150px;-webkit-border-radius: 150px;' \
         ' -moz-border-radius: 150px;"> '
     flash("Now logged in as {0}".format(login_session['username']))
@@ -155,6 +156,7 @@ def fbconnect():
 
 @app.route('/fbdisconnect')
 def fbdisconnect():
+    print "login session fb id:", login_session['facebook_id']
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']

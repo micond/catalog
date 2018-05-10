@@ -149,14 +149,19 @@ function checkLoginState() {
 
                             <h4 class="card-title mb-4 mt-1">Sign in</h4>
                             <p>
+                            <!-- GOOGLE PLUS SIGN IN-->
                                 <div id="signinButton">
                                     <span class="g-signin" data-scope="openid email" data-clientid="903613041823-kvrmcl49lasccshsvq0f041v80f3ephd.apps.googleusercontent.com"
                                         data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin"
                                         data-callback="signInCallback" data-approvalprompt="force">
                                     </span>
                                 </div>
-                                <div id="fb-root"></div>
+                                <!--END GOOGLE PLUS SIGN IN -->
+                                
+                                <!--FACEBOOK SIGN IN -->
+
                                 <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                                <!--END FACEBOOK SIGN IN -->
 
                             </p>
 
@@ -169,26 +174,15 @@ function checkLoginState() {
             </div>
         </div>
     </div>
-    <!-- GOOGLE PLUS SIGN IN-->
+    
 
 
 
 
-    <!--END GOOGLE PLUS SIGN IN -->
+    
 
-    <!--FACEBOOK SIGN IN -->
-
-
-<!--     <button>
-
-
-        <fb:login-button size="large" scope="public_profile,email" onlogin="sendTokenToServer();">
-            <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-        </fb:login-button>
-
-
-    </button> -->
-    <!--END FACEBOOK SIGN IN -->
+    
+    
 
 </body>
 
