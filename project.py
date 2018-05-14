@@ -12,9 +12,7 @@ import httplib2
 import requests
 import random
 import string
-# from flask.ext.httpauth import HTTPBasicAuth
 from flask_httpauth import HTTPBasicAuth
-
 
 auth = HTTPBasicAuth()
 
@@ -33,8 +31,6 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-# Create anti-forgery state token
-
 # User Helper Functions
 
 def createUser(login_session):
@@ -45,11 +41,9 @@ def createUser(login_session):
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
-
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
-
 
 def getUserID(email):
     try:
@@ -58,15 +52,12 @@ def getUserID(email):
     except:
         return None
 
-
 @app.route('/login')
 def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
-
 
 @app.route('/logout')
 def logout():
@@ -88,13 +79,10 @@ def logout():
         del login_session['user_id']
         del login_session['provider']
         print "logout rest"
-        
 
     return redirect(url_for('showCategories'))
 
 # Connect to Facebook
-
-
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
     if request.args.get('state') != login_session['state']:
@@ -102,7 +90,6 @@ def fbconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     access_token = request.data
-    print "access token received %s " % access_token
     # 3 Gets info from fb clients secrets
     app_id = json.loads(open('/home/micond/udacity/client_secrets.json', 'r').read())[
         'web']['app_id']
@@ -114,20 +101,14 @@ def fbconnect():
     # 4 Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.8/me"
     token = result.split(',')[0].split(':')[1].replace('"', '')
-    print "token", token
     url = 'https://graph.facebook.com/v2.8/me?access_token={0}&fields=name,id,email'.format(token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-    print "result", result
-    # print "url sent for API access:%s"% url
-    # print "API JSON result: %s" % result
     data = json.loads(result)
-    print "data", data
     login_session['provider'] = 'facebook'
     login_session['username'] = data["name"]
     login_session['email'] = data["email"]
     login_session['facebook_id'] = data["id"]
-    print "login_session['facebook_id'] = data['id']:",login_session['facebook_id']
 
     # The token must be stored in the login_session in order to properly logout
     login_session['access_token'] = token
@@ -165,7 +146,7 @@ def fbdisconnect():
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
-# End Facebook
+    # End Facebook
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -258,10 +239,7 @@ def gconnect():
     print "done!"
     return output
 
-
-
 # DISCONNECT - Revoke a current user's token and reset their login_session
-
 
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -286,74 +264,35 @@ def gdisconnect():
         return response
 
 
-
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
     categories = session.query(Category).all()
     lastMovies = session.query(Movie).order_by(desc(Movie.time_created)).limit(9)
-#    if 'username' not in login_session:
-#        return render_template('publicCategories.html', categories=categories, lastMovies=lastMovies)
-#    else:
     return render_template('categories.html', categories=categories, lastMovies=lastMovies)
 
 @app.route('/movies/')
 def showMovies():
-    movies = session.query(Movie).all()
-#    if 'username' not in login_session:
-#        return render_template('publicAllmovies.html', movies=movies)
-#    else:        
+    movies = session.query(Movie).all()     
     return render_template('allMovies.html', movies=movies)
 
 @app.route('/category/<string:category_name>/')
 def categorySelect(category_name):
     categoryName = session.query(Category.name).filter_by(name=category_name).one()
-    print (categoryName)
     category = session.query(Category).filter_by(name=category_name).one()
-    # categoryMovies = session.query(Movie).filter_by(category_name=category.name)   
-#    categoryMovies = session.query(Movie).outerjoin(Category,Movie.category_id == Category.id).filter(Category.name == category_name)
-#    print categoryMovies[0]
-#    if 'username' not in login_session:
-#        return render_template('publicCategory.html', categoryMovies=categoryMovies, categoryName=categoryName)
-#    else:
     categoryMovies = session.query(Movie).outerjoin(
                     Genre, Movie.themoviedb_movie_id == Genre.movie_id).filter(Genre.genre_id == category.themoviedb_genre_id)
     return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
-
-    # return jsonify(items=[i.serialize for i in items])
 
 @app.route('/last/JSON')
 def lastAddedMovies():    
     item = session.query(Movie).order_by(desc(Movie.time_created)).limit(5)
     return jsonify(item=[i.serialize for i in item])
 
-#@app.route('/movie/<int:movie_id>')
-#def movie(movie_id):
-#    movie = session.query(Movie).filter_by(id=movie_id)
-    # movieCreator = session.query(Movie).filter_by(id=movie_id).first().created_by
-    # movieCreator = login_session['email']
-    # print movieCreator
-#    if 'username' not in login_session:
-#        return render_template('publicMovie.html', movie=movie)
-#    else:
-        # movieCreator = login_session['email']
-#        print login_session['email']
-#        return render_template('movie.html', movie=movie, movieCreator=login_session['email'])
-    # return jsonify(item=[i.serialize for i in item])
-
 @app.route('/movie/<string:movie_title>')
 def movie(movie_title):
     movie = session.query(Movie).filter_by(title=movie_title)
-    # movieCreator = session.query(Movie).filter_by(id=movie_id).first().created_by
-    # movieCreator = login_session['email']
-    # print movieCreator
- #   if 'username' not in login_session:
- #       return render_template('publicMovie.html', movie=movie)
- #   else:
-#        # movieCreator = login_session['email']
-#        print login_session['email']
     return render_template('movie.html', movie=movie)
-    # return jsonify(item=[i.serialize for i in item])    
 
 @app.route('/movie/new/', methods=['GET', 'POST'])
 def newMovie():
@@ -381,9 +320,6 @@ def newCategory():
            methods=['GET', 'POST'])
 def editMovie(movie_title):
     editedMovie = session.query(Movie).filter_by(title=movie_title).one()
-#    resulte = json.load(editedMovie)
-    print "EDITMOVIE***********************************",editedMovie.title
-#    editedMovie = editedMovie[0]
     if request.method == 'POST':
         print "edit movie POST"
         if request.form['backdrop_path']:
@@ -420,10 +356,6 @@ def editMovie(movie_title):
         return render_template(
             'editMovie.html',  movie_title=movie_title, item=editedMovie)
 
-
-
-
-
 @app.route('/search/', methods=['GET','POST'])
 def searchMovie():
     if request.method == 'POST':
@@ -448,17 +380,12 @@ def deleteMovie(movie_title):
 @app.route('/addMovie/<string:searchTitle>/<int:tmvdb_id>/add', methods=['GET','POST'])
 def addMovie(searchTitle,tmvdb_id):
     result = requests.get('https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US'.format(tmvdb_id,THEMOVIEDB_KEY))
-    print "result", result
     obj = json.loads(result.content)
     if request.method == 'POST':
         checkDuplicity = session.query(Movie.themoviedb_movie_id).filter_by(themoviedb_movie_id=tmvdb_id).all()
-        print "tmvdb_id:********************",tmvdb_id
-        print "check duplicity********************",checkDuplicity
         if not checkDuplicity:
-            print "not in ##########################"
             genres_exists = session.query(Genre.movie_id).filter_by(
                 movie_id=obj['id']).all()
-            print "genres_exists",genres_exists
             movie1 = Movie(
                     created_by=login_session['email'],                    
                     time_created=time.time(),
@@ -477,12 +404,8 @@ def addMovie(searchTitle,tmvdb_id):
                     vote_count=obj['vote_count'],
                     #category=obj['genres'][0]['id']                 
                     )
-            print "movie1",movie1
             session.add(movie1)
-            session.commit()        
-            print "obj['genres'][0]['id']", obj['genres'][0]['id']
-            for y in obj['genres']:
-                print y
+            session.commit()                    
 
             if not genres_exists:
                 if obj['genres']:
@@ -498,7 +421,6 @@ def addMovie(searchTitle,tmvdb_id):
             for i in obj['genres']:
                 q = session.query(Category).filter(Category.themoviedb_genre_id == i['id'])
                 checkDuplicity2 = session.query(Category.themoviedb_genre_id).filter_by(themoviedb_genre_id=i['id']).all()
-                print "++++++++++++++++++++++++++++++++ i + q",i, q
                 if not checkDuplicity2:
                     category1 = Category(name = i['name'],
                                          themoviedb_genre_id = i['id'],
@@ -506,16 +428,12 @@ def addMovie(searchTitle,tmvdb_id):
                                          )
                     session.add(category1)
                     session.commit()
-                    print "new category added:", i['name']
 
             return movie(obj['title'])
         else:
-            print "in ###################33#############"
             return redirect(url_for('searchMovie'))
     else:
         return render_template('addMovie.html', obj=obj)
-
-
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
