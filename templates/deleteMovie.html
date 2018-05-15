@@ -52,11 +52,13 @@
 
 			<div class="row">
 				<div class="col">
-					<h1> Are you sure you want to delete movie: {{item.title}} from database? </h1>
+					<p> Are you sure you want to delete movie:
+						<h1> {{item.title}} </h1> from database? </p>
 					<form action="#" method='post'>
-						<input class="btn btn-primary button-width" role="button" type='submit' value='Delete'>
+						<input class="btn btn-primary btn-lg btn-block" role="button" type='submit' value='Delete'>
 					</form>
-					<a href="{{url_for('showCategories')}}" class="btn btn-primary button-width" role="button"> Cancel </a>
+					<a href="{{url_for('showCategories')}}" class="btn btn-primary btn-lg btn-block btn-secondary" role="button">
+						Cancel </a>
 				</div>
 			</div>
 		</div>
