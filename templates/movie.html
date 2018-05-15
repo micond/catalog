@@ -60,6 +60,11 @@
                             <p class="card-text">
                                 <small class="text-muted">Created by: {{movie.created_by}}</small>
                             </p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Release Date: {{movie.release_date}}</li>
+                                <li class="list-group-item">Rating: {{movie.vote_average}}</li>
+                                <li class="list-group-item">Original Language: {{movie.original_language}}</li>
+                            </ul>
                         </div>
                         <img class="card-img-bottom" src="http://image.tmdb.org/t/p/w1280/{{movie.backdrop_path}}" alt="Card image cap">
                     </div>
