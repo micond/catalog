@@ -375,7 +375,7 @@ def deleteMovie(movie_title):
         session.commit()
         return redirect(url_for('showMovies'))
     else:
-        return render_template('deleteMenuItem.html', item=movieToDelete)
+        return render_template('deleteMovie.html', item=movieToDelete)
 
 @app.route('/addMovie/<string:searchTitle>/<int:tmvdb_id>/add', methods=['GET','POST'])
 def addMovie(searchTitle,tmvdb_id):

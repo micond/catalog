@@ -1,9 +1,9 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css.map') }}">
@@ -24,21 +24,15 @@
 <body>
     <script>
         window.fbAsyncInit = function () {
-            console.log('youpiii');
             FB.init({
                 appId: '184032105530493',
                 cookie: true,
                 xfbml: true,
                 version: 'v3.0'
             });
-            console.log("fakt neviem preco")
             FB.AppEvents.logPageView();
-            console.log("fakt neviem preco")
         };
     </script>
-
-
-    <div id="fb-root"></div>
 
     <script>
         (function (d, s, id) {
@@ -52,7 +46,6 @@
         }(document, 'script', 'facebook-jssdk'));
 
         function checkLoginState() {
-            console.log('test2');
             FB.getLoginStatus(function (response) {
                 statusChangeCallback(response);
             });
@@ -61,7 +54,6 @@
 
         function sendTokenToServer() {
             var access_token = FB.getAuthResponse()['accessToken'];
-            console.log(access_token)
             console.log('Welcome!  Fetching your information.... ');
             FB.api('/me', function (response) {
                 console.log('Successful login for: ' + response.name);
