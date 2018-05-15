@@ -55,10 +55,8 @@ nav {
 }
 
 .btn-toolbar .btn{
-    margin-right: 5px;
-}
-.btn-toolbar .btn:last-child{
-    margin-right: 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .button-width {
