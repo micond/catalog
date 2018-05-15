@@ -5,7 +5,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
@@ -36,8 +35,7 @@
                         {%if 'username' in session %}
                         <span class="navbar-text">
                             logged in as: {{session['email']}}
-                        </span>
-                        {% endif %} {%if 'username' not in session %}
+                        </span> {% endif %} {%if 'username' not in session %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{url_for('login')}}">Log In</a>
                         </li>
@@ -49,35 +47,14 @@
                     </ul>
                 </div>
             </nav>
+            <p> Are you sure you want add movie:
+                <h2> {{obj.title}} </h2>to database? </p>
 
-            <div class="row">
-                <div class="col">
-                    {% for movie in movie %}
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{movie.title}}</h5>
-                            <p class="card-text">{{movie.overview}}</p>
-                            <p class="card-text">
-                                <small class="text-muted">Created by: {{movie.created_by}}</small>
-                            </p>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Release Date: {{movie.release_date}}</li>
-                                <li class="list-group-item">Rating: {{movie.vote_average}}</li>
-                                <li class="list-group-item">Original Language: {{movie.original_language}}</li>
-                            </ul>
-                        </div>
-                        <img class="card-img-bottom" src="http://image.tmdb.org/t/p/w1280/{{movie.backdrop_path}}" alt="Card image cap">
-                    </div>
+            <form action="#" method='post'>
 
-                    {% if 'username' in session %} {% if session['email'] == movie.created_by %}
-                    <div class="btn-toolbar">
-                        <a href="{{url_for('editMovie',movie_title = movie.title)}}" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Edit</a>
+                <input class="btn btn-primary btn-lg btn-block menu-add-btn" type='submit' , value='Add'>
 
-                        <a href="{{url_for('deleteMovie',movie_title = movie.title)}}" class="btn btn-secondary btn-lg btn-block" role="button" aria-pressed="true">Delete</a>
-                    </div>
-                    {% endif %} {% endif %} {% endfor %}
-                </div>
-            </div>
+            </form>
         </div>
     </div>
     <!-- Optional JavaScript -->

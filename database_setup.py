@@ -16,6 +16,7 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     themoviedb_genre_id = Column(Integer)
+    created_by = Column(String(250))
 
     @property
     def serialize(self):
@@ -23,6 +24,7 @@ class Category(Base):
         return {
             'name': self.name,
             'id': self.id,
+            'created_by':self.created_by,
         }
 
 class Movie(Base):
@@ -54,7 +56,7 @@ class Movie(Base):
         """Return object data in easily serializeable format"""
         return {
             'id': self.id,
-            'created_by': self.user_id,
+            'created_by': self.created_by,
             'time_created': self.time_created,
             'time_updated': self.time_updated,
             'backdrop_path': self.backdrop_path,      
@@ -93,11 +95,13 @@ class Genre(Base):
             'title': self.title,
         }
 
-
 class User(Base):
     __tablename__ = 'user'
+
     id = Column(Integer, primary_key=True)
-    username = Column(String(32), index=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    picture = Column(String(250))
     password_hash = Column(String(64))
 
     def hash_password(self, password):

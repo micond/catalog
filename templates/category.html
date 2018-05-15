@@ -1,24 +1,95 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-<!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}"> -->
-	</head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/custom.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>My Movie Catalog</title>
+
+</head>
 
 <body>
-<div class = 'pane'>
-<h1>{{categoryName.name}} Movies:</h1>
+    <div class="container-fluid">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand">Movie Catalog</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{url_for('showCategories')}}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('showMovies')}}">Movies</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav navbar-right">
+                        {%if 'username' in session %}
+                        <span class="navbar-text">
+                            logged in as: {{session['email']}}
+                        </span>
+                        {% endif %} {%if 'username' not in session %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('login')}}">Log In</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url_for('logout')}}">Log out</a>
+                        </li>
+                        {%endif%}
+                    </ul>
+                </div>
+            </nav>
 
-{% for categoryMovie in categoryMovies %}
+            <div class="row">
+                <div class="col">
+                    <h1>{{categoryName.name}} Movies:</h1>
+                    <div class='card-columns'>
+                        {% for categoryMovie in categoryMovies %}
+                        <div class="card">
+                            <a href="{{url_for('movie', movie_title = categoryMovie.title)}}">
+                                <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{categoryMovie.poster_path}}" alt="Card image cap">
+                            </a>
+                            <div class="card-body">
+                                <h6 class="card-title">{{categoryMovie.title}}</h6>
+                                <p class="card-text">{{categoryMovie.overview}}</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Release Date: {{categoryMovie.release_date}}</li>
+                                <li class="list-group-item">Rating: {{categoryMovie.vote_average}}</li>
+                                <li class="list-group-item">Original Language: {{categoryMovie.original_language}}</li>
+                            </ul>
+                            {% if 'username' in session %} {% if session['email'] == categoryMovie.created_by %}
+                            <div class="btn-toolbar">
+                                <a href="{{url_for('editMovie',movie_title = categoryMovie.title)}}" class="btn btn-primary button-width" role="button" aria-pressed="true">Edit</a>
 
-	<a href = "{{url_for('movie', movie_id = categoryMovie.id)}}"> <p>{{categoryMovie.title}}</p></a>
-	<p><a href = "{{url_for('editMovie',movie_id = categoryMovie.id)}}">Edit</a></p>
-	<p><a href = "{{url_for('deleteMovie',movie_id = categoryMovie.id)}}">Delete</a></p>
-{% endfor %}
+                                <a href="{{url_for('deleteMovie',movie_title = categoryMovie.title)}}" class="btn btn-primary button-width" role="button"
+                                    aria-pressed="true">Delete</a>
+                            </div>
+                            {% endif %} {% endif %}
+                        </div>
+                        {% endfor %}
 
-
-
-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

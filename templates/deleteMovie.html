@@ -52,43 +52,13 @@
 
 			<div class="row">
 				<div class="col">
-					<h3> Edit Movie: {{item.title}} </h3>
-
-					<form action="{{url_for('editMovie',movie_title = item.title)}}" method='post'>
-						<p>Backdrop Path:</p>
-						<input class="form-control mr-sm-2" type="text" size='30' placeholder="{{item.backdrop_path}}" name='backdrop_path'>
-						<p>Original title:</p>
-						<input class="form-control mr-sm-2" type='text' size='30' name='original_title' placeholder='{{item.original_title }}'>
-						<p>Overview:</p>
-						<input class="form-control mr-sm-2" type='text' size='30' name='overview' placeholder='{{item.overview}}'>
-						<p>Release date:</p>
-						<input class="form-control mr-sm-2" type='text' size='30' name='release_date' placeholder='{{item.release_date}}'>
-						<p>Poster path:</p>
-						<input class="form-control mr-sm-2" type='text' size='30' name='poster_path' placeholder='{{item.poster_path }}'>
-						<p>Popularity:</p>
-						<input class="form-control mr-sm-2" type='text' size='30' name='popularity' placeholder='{{item.popularity}}'>
-						<p>Video:</p>
-						<input class="form-control mr-sm-2" type='text' size='30' name='video' placeholder='{{item.video}}'>
-						<p>Vote average:</p>
-						<input class="form-control mr-sm-2" type='text' size='30' name='vote_average' placeholder='{{item.vote_average }}'>
-						<p>Vote count:</p>
-						<input class="form-control mr-sm-2" type='text' size='30' name='vote_count' placeholder='{{item.vote_count}}'>
-
-
-
-
-
-
-						<div class="row">
-							<div class="col">
-								<input class="btn btn-primary btn-lg btn-block menu-add-btn" role="button" type='submit' value='Edit'>
-
-
-								<a href="{{url_for('showCategories')}}" class="btn btn-secondary btn-lg btn-block menu-add-btn" role="button"> Cancel </a>
-							</div>
-						</div>
-
+					<p> Are you sure you want to delete movie:
+						<h1> {{item.title}} </h1> from database? </p>
+					<form action="#" method='post'>
+						<input class="btn btn-primary btn-lg btn-block menu-add-btn" role="button" type='submit' value='Delete'>
 					</form>
+					<a href="{{url_for('showCategories')}}" class="btn btn-primary btn-lg btn-block btn-secondary menu-add-btn" role="button">
+						Cancel </a>
 				</div>
 			</div>
 		</div>

@@ -36,8 +36,7 @@
                         {%if 'username' in session %}
                         <span class="navbar-text">
                             logged in as: {{session['email']}}
-                        </span>
-                        {% endif %} {%if 'username' not in session %}
+                        </span> {% endif %} {%if 'username' not in session %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{url_for('login')}}">Log In</a>
                         </li>
@@ -49,39 +48,18 @@
                     </ul>
                 </div>
             </nav>
+            <h2>Search and add Movie</h2>
+            {% if 'username'not in session %}
+            <p>You are not loged in</p>
+            {% else %}
+            <form class="form-inline" action="#" method='post'>
+                <input class="form-control mr-sm-2" type="text" size='30' placeholder="Find your Movie" aria-label="Search" name='title'>
+                <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value='Search'>
+            </form>
+            {% endif %}
 
-            <div class="row">
-                <div class="col">
-                    {% for movie in movie %}
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{movie.title}}</h5>
-                            <p class="card-text">{{movie.overview}}</p>
-                            <p class="card-text">
-                                <small class="text-muted">Created by: {{movie.created_by}}</small>
-                            </p>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Release Date: {{movie.release_date}}</li>
-                                <li class="list-group-item">Rating: {{movie.vote_average}}</li>
-                                <li class="list-group-item">Original Language: {{movie.original_language}}</li>
-                            </ul>
-                        </div>
-                        <img class="card-img-bottom" src="http://image.tmdb.org/t/p/w1280/{{movie.backdrop_path}}" alt="Card image cap">
-                    </div>
-
-                    {% if 'username' in session %} {% if session['email'] == movie.created_by %}
-                    <div class="btn-toolbar">
-                        <a href="{{url_for('editMovie',movie_title = movie.title)}}" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Edit</a>
-
-                        <a href="{{url_for('deleteMovie',movie_title = movie.title)}}" class="btn btn-secondary btn-lg btn-block" role="button" aria-pressed="true">Delete</a>
-                    </div>
-                    {% endif %} {% endif %} {% endfor %}
-                </div>
-            </div>
         </div>
     </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"

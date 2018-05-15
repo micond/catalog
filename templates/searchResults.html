@@ -36,8 +36,7 @@
                         {%if 'username' in session %}
                         <span class="navbar-text">
                             logged in as: {{session['email']}}
-                        </span>
-                        {% endif %} {%if 'username' not in session %}
+                        </span> {% endif %} {%if 'username' not in session %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{url_for('login')}}">Log In</a>
                         </li>
@@ -49,39 +48,38 @@
                     </ul>
                 </div>
             </nav>
+            <a href="{{url_for('searchMovie')}}" class="btn btn-warning btn-lg btn-block menu-add-btn" role="button" aria-pressed="true">New search </a>
 
-            <div class="row">
-                <div class="col">
-                    {% for movie in movie %}
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{movie.title}}</h5>
-                            <p class="card-text">{{movie.overview}}</p>
-                            <p class="card-text">
-                                <small class="text-muted">Created by: {{movie.created_by}}</small>
-                            </p>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Release Date: {{movie.release_date}}</li>
-                                <li class="list-group-item">Rating: {{movie.vote_average}}</li>
-                                <li class="list-group-item">Original Language: {{movie.original_language}}</li>
-                            </ul>
-                        </div>
-                        <img class="card-img-bottom" src="http://image.tmdb.org/t/p/w1280/{{movie.backdrop_path}}" alt="Card image cap">
+            <div class="card-columns">
+                <!--<div class="card-columns" style="column-count: 5;">-->
+                {% for obj in obj %}
+
+                <div class="card">
+                    <a href="{{url_for('movie', movie_title = obj.title)}}">
+                        <img class="card-img-top" src="http://image.tmdb.org/t/p/w500/{{obj.poster_path}}" alt="Card image cap">
+                    </a>
+                    <div class="card-body">
+                        <h6 class="card-title">{{obj.title}}</h6>
+                        <p class="card-text">{{obj.overview}}</p>
                     </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Release Date: {{obj.release_date}}</li>
+                        <li class="list-group-item">Rating: {{obj.vote_average}}</li>
+                        <li class="list-group-item">Original Language: {{obj.original_language}}</li>
+                    </ul>
 
-                    {% if 'username' in session %} {% if session['email'] == movie.created_by %}
                     <div class="btn-toolbar">
-                        <a href="{{url_for('editMovie',movie_title = movie.title)}}" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Edit</a>
+                        <a href="{{url_for('addMovie',searchTitle = obj.title, tmvdb_id = obj.id)}}" class="btn btn-primary button-width-add" role="button"
+                            aria-pressed="true">Add</a>
 
-                        <a href="{{url_for('deleteMovie',movie_title = movie.title)}}" class="btn btn-secondary btn-lg btn-block" role="button" aria-pressed="true">Delete</a>
                     </div>
-                    {% endif %} {% endif %} {% endfor %}
                 </div>
+                {% endfor %}
             </div>
+
+
         </div>
     </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
