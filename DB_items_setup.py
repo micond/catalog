@@ -20,12 +20,9 @@ genreslist = requests.get(
     'https://api.themoviedb.org/3/genre/movie/list?api_key={0}&language=en-US'
     .format(THEMOVIEDB_KEY))
 obj = json.loads(genreslist.content)
-print obj
 last_category = obj['genres'][-1]['name']
-print last_category
 
 for i in obj['genres']:
-    print "genres"
     getgenres = requests.get(
         "https://api.themoviedb.org/3/genre/{0}/movies?api_key={1}&language"
         "=en-US&include_adult=false&sort_by=created_at.asc".format(
