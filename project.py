@@ -321,50 +321,28 @@ def categorySelect(category_name):
         categoryName=categoryName)
 
 
+# API for last added movies
 @app.route('/last/JSON')
 def lastAddedMovies():
     item = session.query(Movie).order_by(desc(Movie.time_created)).limit(5)
     return jsonify(item=[i.serialize for i in item])
 
 
+# API for all added movies
 @app.route('/movies/JSON')
 def showAllMovies():
     item = session.query(Movie).all()
     return jsonify(item=[i.serialize for i in item])
 
 
+# app route for specific movie details
 @app.route('/movie/<string:movie_title>')
 def movie(movie_title):
     movie = session.query(Movie).filter_by(title=movie_title)
     return render_template('movie.html', movie=movie)
 
 
-@app.route('/movie/new/', methods=['GET', 'POST'])
-def newMovie():
-    if request.method == 'POST':
-        newMovie = Movie(
-            title=request.form['title'],
-            overview=request.form['overview'],
-            category_id=request.form['category_id'],
-            time_created=time.time())
-        session.add(newMovie)
-        session.commit()
-        return redirect(url_for('showCategories'))
-    else:
-        return render_template('newMovie.html')
-
-
-@app.route('/category/new/', methods=['GET', 'POST'])
-def newCategory():
-    if request.method == 'POST':
-        newCategory = Category(name=request.form['name'])
-        session.add(newCategory)
-        session.commit()
-        return redirect(url_for('showCategories'))
-    else:
-        return render_template('newCategory.html')
-
-
+# app route for editing specific movie details
 @app.route('/movie/<string:movie_title>/edit/',
            methods=['GET', 'POST'])
 def editMovie(movie_title):
@@ -406,6 +384,19 @@ def editMovie(movie_title):
             'editMovie.html', movie_title=movie_title, item=editedMovie)
 
 
+# app route for deleting specific movie
+@app.route('/movie/<string:movie_title>/delete', methods=['GET', 'POST'])
+def deleteMovie(movie_title):
+    movieToDelete = session.query(Movie).filter_by(title=movie_title).one()
+    if request.method == 'POST':
+        session.delete(movieToDelete)
+        session.commit()
+        return redirect(url_for('showMovies'))
+    else:
+        return render_template('deleteMovie.html', item=movieToDelete)
+
+
+# app route for searching specific movie in The Movie Database - online
 @app.route('/search/', methods=['GET', 'POST'])
 def searchMovie():
     if request.method == 'POST':
@@ -420,17 +411,7 @@ def searchMovie():
         return render_template('search.html')
 
 
-@app.route('/movie/<string:movie_title>/delete', methods=['GET', 'POST'])
-def deleteMovie(movie_title):
-    movieToDelete = session.query(Movie).filter_by(title=movie_title).one()
-    if request.method == 'POST':
-        session.delete(movieToDelete)
-        session.commit()
-        return redirect(url_for('showMovies'))
-    else:
-        return render_template('deleteMovie.html', item=movieToDelete)
-
-
+# app route for adding specific movie into local database
 @app.route(
     '/addMovie/<string:searchTitle>/<int:tmvdb_id>/add',
     methods=[
