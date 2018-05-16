@@ -10,6 +10,7 @@ from passlib.apps import custom_app_context as pwd_context
 
 Base = declarative_base()
 
+
 class Category(Base):
     __tablename__ = 'category'
 
@@ -24,8 +25,9 @@ class Category(Base):
         return {
             'name': self.name,
             'id': self.id,
-            'created_by':self.created_by,
+            'created_by': self.created_by,
         }
+
 
 class Movie(Base):
     __tablename__ = 'movie'
@@ -34,7 +36,7 @@ class Movie(Base):
     created_by = Column(String(80), nullable=False)
     time_created = Column(Integer)
     time_updated = Column(Integer)
-    backdrop_path = Column(String(250)) 
+    backdrop_path = Column(String(250))
     themoviedb_movie_id = Column(Integer)
     children = relationship("Genre")
     original_language = Column(String(4))
@@ -59,9 +61,9 @@ class Movie(Base):
             'created_by': self.created_by,
             'time_created': self.time_created,
             'time_updated': self.time_updated,
-            'backdrop_path': self.backdrop_path,      
+            'backdrop_path': self.backdrop_path,
             'themoviedb_movie_id': self.themoviedb_movie_id,
-            'original_language': self.original_language,            
+            'original_language': self.original_language,
             'original_title': self.original_title,
             'overview': self.overview,
             'release_date': self.release_date,
@@ -72,7 +74,7 @@ class Movie(Base):
             'vote_average': self.vote_average,
             'vote_count': self.vote_count,
             'category_id': self.category_id,
-            # 'category': self.category,        
+            # 'category': self.category,
         }
 
 
@@ -83,7 +85,6 @@ class Genre(Base):
     movie_id = Column(Integer, ForeignKey("movie.themoviedb_movie_id"))
     genre_id = Column(Integer)
     title = Column(String(80), nullable=False)
-    
 
     @property
     def serialize(self):
@@ -94,6 +95,7 @@ class Genre(Base):
             'genre_id': self.genre_id,
             'title': self.title,
         }
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -109,6 +111,7 @@ class User(Base):
 
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
+
 
 engine = create_engine('sqlite:///mymoviedb.db')
 
