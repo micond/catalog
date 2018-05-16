@@ -288,6 +288,7 @@ def gdisconnect():
         return response
 
 
+# app route for main page with all categories and last added movies
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
@@ -300,12 +301,14 @@ def showCategories():
         lastMovies=lastMovies)
 
 
+# app route for displaying all movies in local database
 @app.route('/movies/')
 def showMovies():
     movies = session.query(Movie).all()
     return render_template('allMovies.html', movies=movies)
 
 
+# app route for movies in specific category
 @app.route('/category/<string:category_name>/')
 def categorySelect(category_name):
     categoryName = session.query(
