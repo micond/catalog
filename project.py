@@ -1,6 +1,8 @@
-from flask import Flask, jsonify, render_template, request, redirect, url_for, flash, make_response, abort, g
-from sqlalchemy import create_engine, Column, Integer,String, Boolean, ForeignKey, DateTime, Sequence, Float, desc
-from sqlalchemy.orm import sessionmaker,defer, undefer
+from flask import Flask, jsonify, render_template, request, redirect, url_for
+from flask import flash, make_response, abort, g
+from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy import ForeignKey, DateTime, Sequence, Float, desc
+from sqlalchemy.orm import sessionmaker, defer, undefer
 from database_setup import Category, Base, Movie, Genre, User
 import datetime
 import time
@@ -19,11 +21,13 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['client_id']
+    open('/home/micond/udacity/client_secrets.json', 'r')
+    .read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/home/micond/udacity/client_secrets.json', 'r')
+    .read())['web']['themoviedb_key']
 
 engine = create_engine('sqlite:///mymoviedb.db')
 Base.metadata.bind = engine
@@ -31,8 +35,8 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-# User Helper Functions
 
+# User Helper Functions
 def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
@@ -41,16 +45,19 @@ def createUser(login_session):
     user = session.query(User).filter_by(email=login_session['email']).one()
     return user.id
 
+
 def getUserInfo(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
+
 
 def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except:
+    except BaseException:
         return None
+
 
 @app.route('/login')
 def login():
@@ -58,6 +65,7 @@ def login():
                     for x in xrange(32))
     login_session['state'] = state
     return render_template('login.html', STATE=state)
+
 
 @app.route('/logout')
 def logout():
@@ -82,6 +90,7 @@ def logout():
 
     return redirect(url_for('showCategories'))
 
+
 # Connect to Facebook
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
@@ -91,17 +100,23 @@ def fbconnect():
         return response
     access_token = request.data
     # 3 Gets info from fb clients secrets
-    app_id = json.loads(open('/home/micond/udacity/client_secrets.json', 'r').read())[
-        'web']['app_id']
+    app_id = json.loads(
+        open(
+            '/home/micond/udacity/client_secrets.json',
+            'r').read())['web']['app_id']
     app_secret = json.loads(
-        open('/home/micond/udacity/client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id={0}&client_secret={1}&fb_exchange_token={2}'.format(app_id, app_secret, access_token)
+        open('/home/micond/udacity/client_secrets.json', 'r')
+        .read())['web']['app_secret']
+    url = 'https://graph.facebook.com/oauth/access_token?grant_type=' \
+          'fb_exchange_token&client_id={0}&client_secret={1}&' \
+          'fb_exchange_token={2}'.format(app_id, app_secret, access_token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     # 4 Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.8/me"
     token = result.split(',')[0].split(':')[1].replace('"', '')
-    url = 'https://graph.facebook.com/v2.8/me?access_token={0}&fields=name,id,email'.format(token)
+    url = 'https://graph.facebook.com/v2.8/me?access_token={0}&fields=name,' \
+          'id,email'.format(token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -113,7 +128,8 @@ def fbconnect():
     # The token must be stored in the login_session in order to properly logout
     login_session['access_token'] = token
     # Get user picture
-    url = 'https://graph.facebook.com/v2.8/me/picture?access_token={0}&redirect=0&height=200&width=200'.format(token)
+    url = 'https://graph.facebook.com/v2.8/me/picture?access_token={0}&' \
+          'redirect=0&height=200&width=200'.format(token)
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
@@ -142,11 +158,13 @@ def fbdisconnect():
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
-    url = 'https://graph.facebook.com/{0}/permissions?access_token={1}'.format(facebook_id, access_token)
+    url = 'https://graph.facebook.com/{0}/permissions?access_token={1}'.format(
+        facebook_id, access_token)
     h = httplib2.Http()
     result = h.request(url, 'DELETE')[1]
     return "you have been logged out"
     # End Facebook
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -161,7 +179,8 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets(
-            '/home/micond/udacity/client_secrets.json', scope='')
+            '/home/micond/udacity/client_secrets.json',
+            scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -172,7 +191,9 @@ def gconnect():
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={0}'.format(access_token))
+    url = (
+        'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={0}'
+        .format(access_token))
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
     # If there was an error in the access token info, abort.
@@ -200,8 +221,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+            json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -234,12 +255,14 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 300px; height: 300px;border-radius:' \
+        '150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
 
 # DISCONNECT - Revoke a current user's token and reset their login_session
+
 
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -268,42 +291,61 @@ def gdisconnect():
 @app.route('/categories/')
 def showCategories():
     categories = session.query(Category).all()
-    lastMovies = session.query(Movie).order_by(desc(Movie.time_created)).limit(9)
-    return render_template('categories.html', categories=categories, lastMovies=lastMovies)
+    lastMovies = session.query(Movie).order_by(
+        desc(Movie.time_created)).limit(9)
+    return render_template(
+        'categories.html',
+        categories=categories,
+        lastMovies=lastMovies)
+
 
 @app.route('/movies/')
 def showMovies():
-    movies = session.query(Movie).all()     
+    movies = session.query(Movie).all()
     return render_template('allMovies.html', movies=movies)
+
 
 @app.route('/category/<string:category_name>/')
 def categorySelect(category_name):
-    categoryName = session.query(Category.name).filter_by(name=category_name).one()
+    categoryName = session.query(
+        Category.name).filter_by(
+        name=category_name).one()
     category = session.query(Category).filter_by(name=category_name).one()
     categoryMovies = session.query(Movie).outerjoin(
-                    Genre, Movie.themoviedb_movie_id == Genre.movie_id).filter(Genre.genre_id == category.themoviedb_genre_id)
-    return render_template('category.html', categoryMovies=categoryMovies, categoryName=categoryName)
+        Genre, Movie.themoviedb_movie_id == Genre.movie_id).filter(
+        Genre.genre_id == category.themoviedb_genre_id)
+    return render_template(
+        'category.html',
+        categoryMovies=categoryMovies,
+        categoryName=categoryName)
+
 
 @app.route('/last/JSON')
-def lastAddedMovies():    
+def lastAddedMovies():
     item = session.query(Movie).order_by(desc(Movie.time_created)).limit(5)
     return jsonify(item=[i.serialize for i in item])
+
 
 @app.route('/movie/<string:movie_title>')
 def movie(movie_title):
     movie = session.query(Movie).filter_by(title=movie_title)
     return render_template('movie.html', movie=movie)
 
+
 @app.route('/movie/new/', methods=['GET', 'POST'])
 def newMovie():
     if request.method == 'POST':
         newMovie = Movie(
-            title=request.form['title'], overview=request.form['overview'], category_id=request.form['category_id'], time_created=time.time())
+            title=request.form['title'],
+            overview=request.form['overview'],
+            category_id=request.form['category_id'],
+            time_created=time.time())
         session.add(newMovie)
         session.commit()
         return redirect(url_for('showCategories'))
     else:
         return render_template('newMovie.html')
+
 
 @app.route('/category/new/', methods=['GET', 'POST'])
 def newCategory():
@@ -354,15 +396,19 @@ def editMovie(movie_title):
         return movie(editedMovie.title)
     else:
         return render_template(
-            'editMovie.html',  movie_title=movie_title, item=editedMovie)
+            'editMovie.html', movie_title=movie_title, item=editedMovie)
 
-@app.route('/search/', methods=['GET','POST'])
+
+@app.route('/search/', methods=['GET', 'POST'])
 def searchMovie():
     if request.method == 'POST':
         searchTitle = request.form['title']
-        result = requests.get('https://api.themoviedb.org/3/search/movie?api_key={0}&language=en-US&query={1}&page=1&include_adult=false'.format(THEMOVIEDB_KEY, searchTitle))
+        result = requests.get(
+            'https://api.themoviedb.org/3/search/movie?api_key={0}&language'
+            '=en-US&query={1}&page=1&include_adult=false'.format(
+                THEMOVIEDB_KEY, searchTitle))
         obj = json.loads(result.content)['results']
-        return render_template('searchResults.html', obj=obj) 
+        return render_template('searchResults.html', obj=obj)
     else:
         return render_template('search.html')
 
@@ -377,35 +423,45 @@ def deleteMovie(movie_title):
     else:
         return render_template('deleteMovie.html', item=movieToDelete)
 
-@app.route('/addMovie/<string:searchTitle>/<int:tmvdb_id>/add', methods=['GET','POST'])
-def addMovie(searchTitle,tmvdb_id):
-    result = requests.get('https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US'.format(tmvdb_id,THEMOVIEDB_KEY))
+
+@app.route(
+    '/addMovie/<string:searchTitle>/<int:tmvdb_id>/add',
+    methods=[
+        'GET',
+        'POST'])
+def addMovie(searchTitle, tmvdb_id):
+    result = requests.get(
+        'https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US'
+        .format(
+            tmvdb_id, THEMOVIEDB_KEY))
     obj = json.loads(result.content)
     if request.method == 'POST':
-        checkDuplicity = session.query(Movie.themoviedb_movie_id).filter_by(themoviedb_movie_id=tmvdb_id).all()
+        checkDuplicity = session.query(
+            Movie.themoviedb_movie_id).filter_by(
+            themoviedb_movie_id=tmvdb_id).all()
         if not checkDuplicity:
             genres_exists = session.query(Genre.movie_id).filter_by(
                 movie_id=obj['id']).all()
             movie1 = Movie(
-                    created_by=login_session['email'],                    
-                    time_created=time.time(),
-                    time_updated=time.time(),
-                    backdrop_path=obj['backdrop_path'],                    
-                    themoviedb_movie_id=obj['id'],
-                    original_language=obj['original_language'],
-                    original_title=obj['original_title'],
-                    overview=obj['overview'],
-                    release_date=obj['release_date'],
-                    poster_path=obj['poster_path'],
-                    popularity=obj['popularity'],
-                    title=obj['title'],
-                    video=obj['video'],
-                    vote_average=obj['vote_average'],
-                    vote_count=obj['vote_count'],
-                    #category=obj['genres'][0]['id']                 
-                    )
+                created_by=login_session['email'],
+                time_created=time.time(),
+                time_updated=time.time(),
+                backdrop_path=obj['backdrop_path'],
+                themoviedb_movie_id=obj['id'],
+                original_language=obj['original_language'],
+                original_title=obj['original_title'],
+                overview=obj['overview'],
+                release_date=obj['release_date'],
+                poster_path=obj['poster_path'],
+                popularity=obj['popularity'],
+                title=obj['title'],
+                video=obj['video'],
+                vote_average=obj['vote_average'],
+                vote_count=obj['vote_count'],
+                # category=obj['genres'][0]['id']
+            )
             session.add(movie1)
-            session.commit()                    
+            session.commit()
 
             if not genres_exists:
                 if obj['genres']:
@@ -413,18 +469,21 @@ def addMovie(searchTitle,tmvdb_id):
                         genre1 = Genre(
                             movie_id=obj['id'],
                             genre_id=y['id'],
-                            title=obj['title'],                            
+                            title=obj['title'],
                         )
                         session.add(genre1)
-                        session.commit()          
+                        session.commit()
 
             for i in obj['genres']:
-                q = session.query(Category).filter(Category.themoviedb_genre_id == i['id'])
-                checkDuplicity2 = session.query(Category.themoviedb_genre_id).filter_by(themoviedb_genre_id=i['id']).all()
+                q = session.query(Category).filter(
+                    Category.themoviedb_genre_id == i['id'])
+                checkDuplicity2 = session.query(
+                    Category.themoviedb_genre_id).filter_by(
+                    themoviedb_genre_id=i['id']).all()
                 if not checkDuplicity2:
-                    category1 = Category(name = i['name'],
-                                         themoviedb_genre_id = i['id'],
-                                         created_by = login_session['email'],
+                    category1 = Category(name=i['name'],
+                                         themoviedb_genre_id=i['id'],
+                                         created_by=login_session['email'],
                                          )
                     session.add(category1)
                     session.commit()
@@ -434,6 +493,7 @@ def addMovie(searchTitle,tmvdb_id):
             return redirect(url_for('searchMovie'))
     else:
         return render_template('addMovie.html', obj=obj)
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
