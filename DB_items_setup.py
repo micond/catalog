@@ -45,8 +45,7 @@ for i in obj['genres']:
 
             genres_exists = session.query(Genre.movie_id).filter_by(movie_id=j['id']).all()
 
-            movie_count = session.query(Movie.id).filter_by(category_id=actual_category).count()
-            print movie_count
+            movie_count = session.query(Movie.id).filter_by(category_id=actual_category).count()            
 
             if not exists and movie_count < 4 or movie_count == 4:
                 print " -", j['title']
