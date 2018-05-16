@@ -44,8 +44,8 @@ for i in obj['genres']:
             exists = session.query(Movie.themoviedb_movie_id).filter_by(
                 themoviedb_movie_id=j['id']).all()
 
-            genres_exists = session.query(Genre.movie_id).filter_by(
-                movie_id=j['id']).all()
+            genres_exists = session.query(
+                Genre.movie_id).filter_by(movie_id=j['id']).all()
 
             movie_count = session.query(Movie.id).filter_by(
                 category_id=actual_category).count()
@@ -82,6 +82,7 @@ for i in obj['genres']:
                         )
                         session.add(genre1)
                         session.commit()
+                        print "commit"
 
                 if movie_count == 4 and i['name'] == last_category:
                     print "Database setup completed. Congrats!!!"
