@@ -42,6 +42,33 @@ Installation instructions are for Linux debian based distributions.
 6. To run the application please run ```$ python project.py``` in terminal.
 7. If  you would like to prepopulate catalog database with movie items for each available category run ```$ python DB_items_setup.py```
 
+8. client_secrets.json file needs to be added in the same folder where catalog app resides. 
+    - format of the file:
+```json
+{
+    "web": {
+    	"app_id":"Facebook app id",
+    	"app_secret":"Facebook app secret",
+        "client_id": "google id",
+        "client_secret": "google secret",
+        "project_id": "your project in google dev console",
+        "client_email":"same as client_id",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://accounts.google.com/o/oauth2/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "redirect_uris": [
+            "http://localhost:5000",
+        ],
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/" + "dev google id",
+        "javascript_origins": [
+            "http://localhost:5000",
+            "http://localhost",
+            "https://accounts.google.com"
+        ],
+        "themoviedb_key": "The movie Database key"
+    }
+}    
+```
 ## API Restfull
 - List all movies in catalog database:
     - method type: GET
@@ -64,4 +91,3 @@ Installation instructions are for Linux debian based distributions.
 - [Postgresql](https://www.postgresql.org/)
 - [Oracle - VirtualBox Linux - Debian distribution](https://www.virtualbox.org/)
 - Recommended Linux Distributions [Ubuntu](https://www.ubuntu.com/) , [Mint](https://linuxmint.com/)
-
