@@ -42,7 +42,7 @@ Installation instructions are for Linux debian based distributions.
 6. To run the application please run ```$ python project.py``` in terminal.
 7. If  you would like to prepopulate catalog database with movie items for each available category run ```$ python DB_items_setup.py```
 
-8. client_secrets.json file needs to be added in the same folder where catalog app resides. 
+8. Create client_secrets.json file, fill with your google, facebook and themoviedb keys/secrets/ etc.. and correct the path to the file in project.py on lines: 26,31,107,110,184
     - format of the file:
 ```json
 {
