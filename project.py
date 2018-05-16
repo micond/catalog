@@ -328,7 +328,7 @@ def lastAddedMovies():
 
 
 @app.route('/movies/JSON')
-def showMovies():
+def showAllMovies():
     item = session.query(Movie).all()
     return jsonify(item=[i.serialize for i in item])
 
