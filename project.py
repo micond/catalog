@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 from flask import Flask, jsonify, render_template, request, redirect, url_for
 from flask import flash, make_response, abort, g
 from sqlalchemy import create_engine, Column, Integer, String, Boolean
@@ -261,9 +263,8 @@ def gconnect():
     print "done!"
     return output
 
+
 # DISCONNECT - Revoke a current user's token and reset their login_session
-
-
 @app.route('/gdisconnect')
 def gdisconnect():
     # Only disconnect a connected user.
@@ -323,6 +324,12 @@ def categorySelect(category_name):
 @app.route('/last/JSON')
 def lastAddedMovies():
     item = session.query(Movie).order_by(desc(Movie.time_created)).limit(5)
+    return jsonify(item=[i.serialize for i in item])
+
+
+@app.route('/movies/JSON')
+def showMovies():
+    item = session.query(Movie).all()
     return jsonify(item=[i.serialize for i in item])
 
 
@@ -475,8 +482,6 @@ def addMovie(searchTitle, tmvdb_id):
                         session.commit()
 
             for i in obj['genres']:
-                q = session.query(Category).filter(
-                    Category.themoviedb_genre_id == i['id'])
                 checkDuplicity2 = session.query(
                     Category.themoviedb_genre_id).filter_by(
                     themoviedb_genre_id=i['id']).all()
