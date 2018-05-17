@@ -74,9 +74,9 @@ Installation instructions are for Linux debian based distributions.
 ## API Restfull
 #### Method name: getlastMovies
 - List last 5 movies added into the catalog database:
-         - method type: GET
-         - output format: JSON
-         - endpoint: http://localhost:5000/API/v1/getlastMovies
+    - method type: GET
+    - output format: JSON
+    - endpoint: http://localhost:5000/API/v1/getlastMovies
     - response example:
 ```json
 {
