@@ -12,6 +12,9 @@ Base = declarative_base()
 
 
 class Category(Base):
+    """
+    Category class, automaticaly created by API and reflected in app DB
+    """
     __tablename__ = 'category'
 
     id = Column(Integer, primary_key=True)
@@ -30,6 +33,9 @@ class Category(Base):
 
 
 class Movie(Base):
+    """
+    Class for movie items.
+    """
     __tablename__ = 'movie'
 
     id = Column(Integer, primary_key=True)
@@ -79,6 +85,9 @@ class Movie(Base):
 
 
 class Genre(Base):
+    """
+    Class specifies categories for each movie item.
+    """
     __tablename__ = 'genre'
 
     id = Column(Integer, primary_key=True)
@@ -98,6 +107,9 @@ class Genre(Base):
 
 
 class User(Base):
+    """
+    Class specifies basic user data.
+    """
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)

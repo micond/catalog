@@ -23,12 +23,12 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r')
+    open('client_secrets.json', 'r')
     .read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('/home/micond/udacity/client_secrets.json', 'r')
+    open('client_secrets.json', 'r')
     .read())['web']['themoviedb_key']
 
 engine = create_engine('sqlite:///mymoviedb.db')
@@ -124,10 +124,10 @@ def fbconnect():
     # 3 Gets info from fb clients secrets
     app_id = json.loads(
         open(
-            '/home/micond/udacity/client_secrets.json',
+            'client_secrets.json',
             'r').read())['web']['app_id']
     app_secret = json.loads(
-        open('/home/micond/udacity/client_secrets.json', 'r')
+        open('client_secrets.json', 'r')
         .read())['web']['app_secret']
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=' \
           'fb_exchange_token&client_id={0}&client_secret={1}&' \
@@ -208,7 +208,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets(
-            '/home/micond/udacity/client_secrets.json',
+            'client_secrets.json',
             scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)

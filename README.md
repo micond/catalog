@@ -27,7 +27,9 @@ Installation instructions are for Linux debian based distributions.
 	* zip file [https://github.com/micond/catalog/archive/master.zip](https://github.com/micond/catalog/archive/master.zip "download zip file")
 	* git clone [https://github.com/micond/catalog.git](https://github.com/micond/catalog.git "git clone repository")
 2. Install [Python](https://www.python.org/)
-3. Install python libraries:
+3. Install python libraries via ```requirements.txt``` included with the app:
+    run ```$ pip install -r requirements.txt``` in terminal.
+4. Install python libraries manualy:
    - flask - [Installation Documentation](http://flask.pocoo.org/docs/0.12/installation/)
    - sqlalchemy - ```$ pip install SQLAlchemy``` 
    - oauth2client - [Installation Documentation](https://oauth2client.readthedocs.io/en/latest/)
@@ -42,7 +44,7 @@ Installation instructions are for Linux debian based distributions.
 6. To run the application please run ```$ python project.py``` in terminal.
 7. If  you would like to prepopulate catalog database with movie items for each available category run ```$ python DB_items_setup.py```
 
-8. Create client_secrets.json file, fill with your google, facebook and themoviedb keys/secrets/ etc.. and correct the path to the file in project.py on lines: 26,31,107,110,184
+8. Fill client_secrets.json file with your google, facebook and themoviedb keys/secrets/ etc.. 
     - format of the file:
 ```json
 {
@@ -70,15 +72,272 @@ Installation instructions are for Linux debian based distributions.
 }    
 ```
 ## API Restfull
-- List all movies in catalog database:
-    - method type: GET
-    - output format: JSON
-    - endpoint: http://localhost:5000/movies/JSON
+#### Method name: getlastMovies
 - List last 5 movies added into the catalog database:
-    - method type: GET
-    - output format: JSON
-    - endpoint: http://localhost:5000/last/JSON
-
+         - method type: GET
+         - output format: JSON
+         - endpoint: http://localhost:5000/API/v1/getlastMovies
+    - response example:
+```json
+{
+  "categoryMovies": [
+    {
+      "backdrop_path": "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", 
+      "category_id": 1, 
+      "created_by": "Admin", 
+      "id": 1, 
+      "original_language": "en", 
+      "original_title": "Avengers: Infinity War", 
+      "overview": "As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality. Everything the Avengers have fought for has led up to this moment - the fate of Earth and existence itself has never been more uncertain.", 
+      "popularity": 541.656849, 
+      "poster_path": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg", 
+      "release_date": "2018-04-25", 
+      "themoviedb_movie_id": 299536, 
+      "time_created": 1526479468.823073, 
+      "time_updated": 1526479468.823074, 
+      "title": "Avengers: Infinity War", 
+      "video": "0", 
+      "vote_average": 8.5, 
+      "vote_count": 3443
+    }, 
+```
+#### Method name: getAllMovies
+- List all movies available in db:
+         - method type: GET
+         - output format: JSON
+         - endpoint: http://localhost:5000/API/v1/getAllMovies
+    - response example:
+```json
+{
+  "item": [
+    {
+      "backdrop_path": "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg", 
+      "category_id": 1, 
+      "created_by": "Admin", 
+      "id": 1, 
+      "original_language": "en", 
+      "original_title": "Avengers: Infinity War", 
+      "overview": "As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality. Everything the Avengers have fought for has led up to this moment - the fate of Earth and existence itself has never been more uncertain.", 
+      "popularity": 541.656849, 
+      "poster_path": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg", 
+      "release_date": "2018-04-25", 
+      "themoviedb_movie_id": 299536, 
+      "time_created": 1526479468.823073, 
+      "time_updated": 1526479468.823074, 
+      "title": "Avengers: Infinity War", 
+      "video": "0", 
+      "vote_average": 8.5, 
+      "vote_count": 3443
+    }, 
+    {
+      "backdrop_path": "/AlFqBwJnokrp9zWTXOUv7uhkaeq.jpg", 
+      "category_id": 1, 
+      "created_by": "Admin", 
+      "id": 2, 
+      "original_language": "en", 
+      "original_title": "Black Panther", 
+      "overview": "King T'Challa returns home from America to the reclusive, technologically advanced African nation of Wakanda to serve as his country's new leader. However, T'Challa soon finds that he is challenged for the throne by factions within his own country as well as without. Using powers reserved to Wakandan kings, T'Challa assumes the Black Panther mantel to join with girlfriend Nakia, the queen-mother, his princess-kid sister, members of the Dora Milaje (the Wakandan 'special forces') and an American secret agent, to prevent Wakanda from being dragged into a world war.", 
+      "popularity": 276.266641, 
+      "poster_path": "/uxzzxijgPIY7slzFvMotPv8wjKA.jpg", 
+      "release_date": "2018-02-13", 
+      "themoviedb_movie_id": 284054, 
+      "time_created": 1526479468.849654, 
+      "time_updated": 1526479468.849655, 
+      "title": "Black Panther", 
+      "video": "0", 
+      "vote_average": 7.3, 
+      "vote_count": 5209
+    }
+  ] 
+```
+#### Method name: getAvailableCategories
+- List all categories available in db:
+         - method type: GET
+         - output format: JSON
+         - endpoint: http://localhost:5000/API/v1/getAvailableCategories
+    - response example:
+```json
+{
+  "item": [
+    {
+      "created_by": "admin", 
+      "id": 1, 
+      "name": "Action"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 2, 
+      "name": "Adventure"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 3, 
+      "name": "Animation"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 4, 
+      "name": "Comedy"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 5, 
+      "name": "Crime"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 6, 
+      "name": "Documentary"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 7, 
+      "name": "Drama"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 8, 
+      "name": "Family"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 9, 
+      "name": "Fantasy"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 10, 
+      "name": "History"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 11, 
+      "name": "Horror"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 12, 
+      "name": "Music"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 13, 
+      "name": "Mystery"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 14, 
+      "name": "Romance"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 15, 
+      "name": "Science Fiction"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 16, 
+      "name": "TV Movie"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 17, 
+      "name": "Thriller"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 18, 
+      "name": "War"
+    }, 
+    {
+      "created_by": "admin", 
+      "id": 19, 
+      "name": "Western"
+    }
+  ]
+}
+```
+#### Method name: getMovieDetails
+- List movie details:
+         - method type: GET
+         - output format: JSON
+         - endpoint: http://localhost:5000/API/v1/getMovieDetails/<movie_title>
+    - response example:
+```json
+{
+  "item": [
+    {
+      "backdrop_path": "/mhdeE1yShHTaDbJVdWyTlzFvNkr.jpg", 
+      "category_id": 2, 
+      "created_by": "Admin", 
+      "id": 6, 
+      "original_language": "en", 
+      "original_title": "Zootopia", 
+      "overview": "Determined to prove herself, Officer Judy Hopps, the first bunny on Zootopia's police force, jumps at the chance to crack her first case - even if it means partnering with scam-artist fox Nick Wilde to solve the mystery.", 
+      "popularity": 173.225696, 
+      "poster_path": "/sM33SANp9z6rXW8Itn7NnG1GOEs.jpg", 
+      "release_date": "2016-02-11", 
+      "themoviedb_movie_id": 269149, 
+      "time_created": 1526479469.935533, 
+      "time_updated": 1526479469.935533, 
+      "title": "Zootopia", 
+      "video": "0", 
+      "vote_average": 7.7, 
+      "vote_count": 7240
+    }
+  ]
+}
+```
+#### Method name: getCategoryMovies
+- List all movies in specific category:
+         - method type: GET
+         - output format: JSON
+         - endpoint: http://localhost:5000/API/v1/getCategoryMovies/<category_name>
+    - response example:
+```json
+{
+  "categoryMovies": [
+    {
+      "backdrop_path": "/mhdeE1yShHTaDbJVdWyTlzFvNkr.jpg", 
+      "category_id": 2, 
+      "created_by": "Admin", 
+      "id": 6, 
+      "original_language": "en", 
+      "original_title": "Zootopia", 
+      "overview": "Determined to prove herself, Officer Judy Hopps, the first bunny on Zootopia's police force, jumps at the chance to crack her first case - even if it means partnering with scam-artist fox Nick Wilde to solve the mystery.", 
+      "popularity": 173.225696, 
+      "poster_path": "/sM33SANp9z6rXW8Itn7NnG1GOEs.jpg", 
+      "release_date": "2016-02-11", 
+      "themoviedb_movie_id": 269149, 
+      "time_created": 1526479469.935533, 
+      "time_updated": 1526479469.935533, 
+      "title": "Zootopia", 
+      "video": "0", 
+      "vote_average": 7.7, 
+      "vote_count": 7240
+    }, 
+    {
+      "backdrop_path": "/askg3SMvhqEl4OL52YuvdtY40Yb.jpg", 
+      "category_id": 2, 
+      "created_by": "Admin", 
+      "id": 8, 
+      "original_language": "en", 
+      "original_title": "Coco", 
+      "overview": "Despite his family\u2019s baffling generations-old ban on music, Miguel dreams of becoming an accomplished musician like his idol, Ernesto de la Cruz. Desperate to prove his talent, Miguel finds himself in the stunning and colorful Land of the Dead following a mysterious chain of events. Along the way, he meets charming trickster Hector, and together, they set off on an extraordinary journey to unlock the real story behind Miguel's family history.", 
+      "popularity": 95.476977, 
+      "poster_path": "/eKi8dIrr8voobbaGzDpe8w0PVbC.jpg", 
+      "release_date": "2017-10-27", 
+      "themoviedb_movie_id": 354912, 
+      "time_created": 1526479469.986587, 
+      "time_updated": 1526479469.986587, 
+      "title": "Coco", 
+      "video": "0", 
+      "vote_average": 7.8, 
+      "vote_count": 4397
+    }
+  ]
+}
+```
 ## Tools / Techniques
 - Python 2.7
 - mysql
