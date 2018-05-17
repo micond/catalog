@@ -353,6 +353,10 @@ def editMovie(movie_title):
         flash('You need to be logged in to edit an item')
         return redirect('/login')
     editedMovie = session.query(Movie).filter_by(title=movie_title).one()
+    if editedMovie.created_by != login_session['email']:
+        return "<script>function myFunction() {alert('You are not authorized" \
+            "to edit this movie. Please create your own movie " \
+            "in order to edit.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         if request.form['backdrop_path']:
             editedMovie.backdrop_path = request.form['backdrop_path']
@@ -384,6 +388,13 @@ def editMovie(movie_title):
 @app.route('/movie/<string:movie_title>/delete', methods=['GET', 'POST'])
 def deleteMovie(movie_title):
     movieToDelete = session.query(Movie).filter_by(title=movie_title).one()
+    if 'username' not in login_session:
+        flash('You need to be logged in to delete an item')
+        return redirect('/login')
+    if movieToDelete.created_by != login_session['email']:
+        return "<script>function myFunction() {alert('You are not authorized" \
+            "to delete this movie. Please create your own movie " \
+            "in order to delete.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         session.delete(movieToDelete)
         session.commit()
