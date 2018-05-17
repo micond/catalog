@@ -351,33 +351,23 @@ def movie(movie_title):
 def editMovie(movie_title):
     editedMovie = session.query(Movie).filter_by(title=movie_title).one()
     if request.method == 'POST':
-        print "edit movie POST"
         if request.form['backdrop_path']:
-            print "path"
             editedMovie.backdrop_path = request.form['backdrop_path']
         if request.form['original_title']:
-            print "title"
             editedMovie.original_title = request.form['original_title']
         if request.form['overview']:
-            print "overview"
             editedMovie.overview = request.form['overview']
         if request.form['release_date']:
-            print "release date"
             editedMovie.release_date = request.form['release_date']
         if request.form['poster_path']:
-            print "path"
             editedMovie.poster_path = request.form['poster_path']
         if request.form['popularity']:
-            print "popularity"
             editedMovie.popularity = request.form['popularity']
         if request.form['video']:
-            print "video"
             editedMovie.video = request.form['video']
         if request.form['vote_average']:
-            print "vote avarage"
             editedMovie.vote_average = request.form['vote_average']
         if request.form['vote_count']:
-            print "vote count"
             editedMovie.vote_count = request.form['vote_count']
         session.add(editedMovie)
         session.commit()
