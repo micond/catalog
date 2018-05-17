@@ -404,7 +404,7 @@ def showMovieDetails(movie_title):
 
 
 # API to show movies in specific Category
-@app.route('/category/<string:category_name>')
+@app.route('/category.json/<string:category_name>')
 def showCategoryItems(category_name):
     """
     Function for public API - display all movies in specific category.
