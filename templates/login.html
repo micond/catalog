@@ -116,7 +116,16 @@
 
             <p> You are already logged in</p>
 
-            {% endif %} {%if 'username' not in session %}
+            {% endif %} {%if 'username' not in session %} {% with messages = get_flashed_messages() %} {% if messages %}
+
+            <ul>
+                {% for message in messages %}
+                <li>
+                    <strong>{{message}}</strong>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %} {% endwith %}
             <div class="row">
                 <div class="col">
                     <div class="card">

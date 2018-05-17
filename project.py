@@ -348,6 +348,9 @@ def movie(movie_title):
 # app route for editing specific movie details
 @app.route('/movie/<string:movie_title>/edit/',
            methods=['GET', 'POST'])
+if 'username' not in login_session:
+    flash('You need to be logged in to edit an item')
+    return redirect('/login')
 def editMovie(movie_title):
     editedMovie = session.query(Movie).filter_by(title=movie_title).one()
     if request.method == 'POST':
