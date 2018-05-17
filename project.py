@@ -40,6 +40,9 @@ session = DBSession()
 
 # User Helper Functions
 def createUser(login_session):
+    """
+    Helper Function to add new user into catalog db.
+    """
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
     session.add(newUser)
@@ -49,11 +52,18 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    """
+    Helper Function to get user details from the db. this function is for
+    feature enhancements.
+    """
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    """
+    Helper Function to return user id.
+    """
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -63,6 +73,9 @@ def getUserID(email):
 
 @app.route('/login')
 def login():
+    """
+    Function to create anti-forgery state token.
+    """
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -71,6 +84,9 @@ def login():
 
 @app.route('/logout')
 def logout():
+    """
+    Function to logout user and delete data in login_session.
+    """
     if 'username' in login_session:
         if login_session['provider'] == 'facebook':
             fbdisconnect()
@@ -96,6 +112,10 @@ def logout():
 # Connect to Facebook
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
+    """
+    Gathers data from Facebook Sign In API and places it inside a session
+    variable.
+    """
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -157,6 +177,9 @@ def fbconnect():
 
 @app.route('/fbdisconnect')
 def fbdisconnect():
+    """
+    Function to logout Facbook user.
+    """
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
@@ -170,6 +193,10 @@ def fbdisconnect():
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
+    """
+    Gathers data from Google Sign In API and places it inside a session
+    variable.
+    """
     # Validate state token
     if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter.'), 401)
@@ -267,6 +294,9 @@ def gconnect():
 # DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
+    """
+    Function to logout google user.
+    """
     # Only disconnect a connected user.
     access_token = login_session.get('access_token')
     if access_token is None:
@@ -292,6 +322,9 @@ def gdisconnect():
 @app.route('/')
 @app.route('/categories/')
 def showCategories():
+    """
+    Function to display all categories with 5 last added movies.
+    """
     categories = session.query(Category).all()
     lastMovies = session.query(Movie).order_by(
         desc(Movie.time_created)).limit(9)
@@ -304,6 +337,9 @@ def showCategories():
 # app route for displaying all movies in local database
 @app.route('/movies/')
 def showMovies():
+    """
+    Function to display all movies in the db.
+    """
     movies = session.query(Movie).all()
     return render_template('allMovies.html', movies=movies)
 
@@ -311,6 +347,9 @@ def showMovies():
 # app route for movies in specific category
 @app.route('/category/<string:category_name>/')
 def categorySelect(category_name):
+    """
+    Function to display all movies in specific category.
+    """
     categoryName = session.query(
         Category.name).filter_by(
         name=category_name).one()
@@ -327,6 +366,9 @@ def categorySelect(category_name):
 # API for last added movies
 @app.route('/last/JSON')
 def lastAddedMovies():
+    """
+    Function for public API - display last 5 movies added.
+    """
     item = session.query(Movie).order_by(desc(Movie.time_created)).limit(5)
     return jsonify(item=[i.serialize for i in item])
 
@@ -334,6 +376,9 @@ def lastAddedMovies():
 # API for all added movies
 @app.route('/movies/JSON')
 def showAllMovies():
+    """
+    Function for public API - display all movies available in db.
+    """
     item = session.query(Movie).all()
     return jsonify(item=[i.serialize for i in item])
 
@@ -341,6 +386,9 @@ def showAllMovies():
 # API to show Categories
 @app.route('/categories/JSON')
 def showAllCategories():
+    """
+    Function for public API - display all available categories.
+    """
     item = session.query(Category).all()
     return jsonify(item=[i.serialize for i in item])
 
@@ -348,6 +396,9 @@ def showAllCategories():
 # API to show specific movie
 @app.route('/movie/<string:movie_title>/JSON')
 def showMovieDetails(movie_title):
+    """
+    Function for public API - display movie data.
+    """
     item = session.query(Movie).filter_by(title=movie_title)
     return jsonify(item=[i.serialize for i in item])
 
@@ -355,6 +406,9 @@ def showMovieDetails(movie_title):
 # API to show movies in specific Category
 @app.route('/category/<string:category_name>/JSON')
 def showCategoryItems(category_name):
+    """
+    Function for public API - display all movies in specific category.
+    """
     category = session.query(Category).filter_by(name=category_name).one()
     categoryMovies = session.query(Movie).outerjoin(
         Genre, Movie.themoviedb_movie_id == Genre.movie_id).filter(
@@ -365,6 +419,9 @@ def showCategoryItems(category_name):
 # app route for specific movie details
 @app.route('/movie/<string:movie_title>')
 def movie(movie_title):
+    """
+    Function for displaying specific movie info.
+    """
     movie = session.query(Movie).filter_by(title=movie_title)
     return render_template('movie.html', movie=movie)
 
@@ -373,6 +430,9 @@ def movie(movie_title):
 @app.route('/movie/<string:movie_title>/edit/',
            methods=['GET', 'POST'])
 def editMovie(movie_title):
+    """
+    Function for editing specific movie details.
+    """
     if 'username' not in login_session:
         flash('You need to be logged in to edit an item')
         return redirect('/login')
@@ -411,6 +471,9 @@ def editMovie(movie_title):
 # app route for deleting specific movie
 @app.route('/movie/<string:movie_title>/delete', methods=['GET', 'POST'])
 def deleteMovie(movie_title):
+    """
+    Function for deleting specific movie from the catalog database.
+    """
     movieToDelete = session.query(Movie).filter_by(title=movie_title).one()
     if 'username' not in login_session:
         flash('You need to be logged in to delete an item')
@@ -430,6 +493,10 @@ def deleteMovie(movie_title):
 # app route for searching specific movie in The Movie Database - online
 @app.route('/search/', methods=['GET', 'POST'])
 def searchMovie():
+    """
+    Function for searching specific movie in the: THE MOVIE DB online provider
+    database. Function is using public API to search movies.
+    """
     if request.method == 'POST':
         searchTitle = request.form['title']
         result = requests.get(
@@ -449,6 +516,9 @@ def searchMovie():
         'GET',
         'POST'])
 def addMovie(searchTitle, tmvdb_id):
+    """
+    Function for adding specific movie into catalog DB.
+    """
     result = requests.get(
         'https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-US'
         .format(
