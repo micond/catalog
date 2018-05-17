@@ -364,7 +364,7 @@ def categorySelect(category_name):
 
 
 # API for last added movies
-@app.route('/last/JSON')
+@app.route('/API/v1/getlastMovies')
 def lastAddedMovies():
     """
     Function for public API - display last 5 movies added.
@@ -374,7 +374,7 @@ def lastAddedMovies():
 
 
 # API for all added movies
-@app.route('/movies/JSON')
+@app.route('/API/v1/getAllMovies')
 def showAllMovies():
     """
     Function for public API - display all movies available in db.
@@ -384,7 +384,7 @@ def showAllMovies():
 
 
 # API to show Categories
-@app.route('/categories/JSON')
+@app.route('/API/v1/getAvailableCategories')
 def showAllCategories():
     """
     Function for public API - display all available categories.
@@ -394,7 +394,7 @@ def showAllCategories():
 
 
 # API to show specific movie
-@app.route('/movie/<string:movie_title>/JSON')
+@app.route('/API/v1/getMovieDetails/<string:movie_title>')
 def showMovieDetails(movie_title):
     """
     Function for public API - display movie data.
@@ -404,7 +404,7 @@ def showMovieDetails(movie_title):
 
 
 # API to show movies in specific Category
-@app.route('/category.json/<string:category_name>')
+@app.route('/v1/getCategoryMovies/<string:category_name>')
 def showCategoryItems(category_name):
     """
     Function for public API - display all movies in specific category.
