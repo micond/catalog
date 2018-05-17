@@ -338,6 +338,30 @@ def showAllMovies():
     return jsonify(item=[i.serialize for i in item])
 
 
+# API to show Categories
+@app.route('/categories/JSON')
+def showAllCategories():
+    item = session.query(Category).all()
+    return jsonify(item=[i.serialize for i in item])
+
+
+# API to show specific movie
+@app.route('/movie/<string:movie_title>/JSON')
+def showMovieDetails(movie_title):
+    item = session.query(Movie).filter_by(title=movie_title)
+    return jsonify(item=[i.serialize for i in item])
+
+
+# API to show movies in specific Category
+@app.route('/category/<string:category_name>/JSON')
+def showCategoryItems(category_name):
+    category = session.query(Category).filter_by(name=category_name).one()
+    categoryMovies = session.query(Movie).outerjoin(
+        Genre, Movie.themoviedb_movie_id == Genre.movie_id).filter(
+        Genre.genre_id == category.themoviedb_genre_id)
+    return jsonify(categoryMovies=[i.serialize for i in categoryMovies])
+
+
 # app route for specific movie details
 @app.route('/movie/<string:movie_title>')
 def movie(movie_title):
@@ -430,6 +454,9 @@ def addMovie(searchTitle, tmvdb_id):
         .format(
             tmvdb_id, THEMOVIEDB_KEY))
     obj = json.loads(result.content)
+    if 'username' not in login_session:
+        flash('You need to be logged in to add an item')
+        return redirect('/login')
     if request.method == 'POST':
         checkDuplicity = session.query(
             Movie.themoviedb_movie_id).filter_by(
