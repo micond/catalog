@@ -48,7 +48,16 @@
                     </ul>
                 </div>
             </nav>
-            {%if 'username' in session %}
+            {%if 'username' in session %} {% with messages = get_flashed_messages() %} {% if messages %}
+
+            <ul>
+                {% for message in messages %}
+                <li>
+                    <strong>{{message}}</strong>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %} {% endwith %}
             <div class="row">
                 <div class="col">
                     <a class="btn btn-primary btn-lg btn-block menu-add-btn" href="{{url_for('searchMovie')}}" role="button">Add new Movie</a>
