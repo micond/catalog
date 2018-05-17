@@ -103,9 +103,9 @@ Installation instructions are for Linux debian based distributions.
 ```
 #### Method name: getAllMovies
 - List all movies available in db:
-         - method type: GET
-         - output format: JSON
-         - endpoint: http://localhost:5000/API/v1/getAllMovies
+    - method type: GET
+    - output format: JSON
+    - endpoint: http://localhost:5000/API/v1/getAllMovies
     - response example:
 ```json
 {
@@ -152,9 +152,9 @@ Installation instructions are for Linux debian based distributions.
 ```
 #### Method name: getAvailableCategories
 - List all categories available in db:
-         - method type: GET
-         - output format: JSON
-         - endpoint: http://localhost:5000/API/v1/getAvailableCategories
+    - method type: GET
+    - output format: JSON
+    - endpoint: http://localhost:5000/API/v1/getAvailableCategories
     - response example:
 ```json
 {
@@ -259,9 +259,9 @@ Installation instructions are for Linux debian based distributions.
 ```
 #### Method name: getMovieDetails
 - List movie details:
-         - method type: GET
-         - output format: JSON
-         - endpoint: http://localhost:5000/API/v1/getMovieDetails/<movie_title>
+    - method type: GET
+    - output format: JSON
+    - endpoint: http://localhost:5000/API/v1/getMovieDetails/<movie_title>
     - response example:
 ```json
 {
@@ -290,9 +290,9 @@ Installation instructions are for Linux debian based distributions.
 ```
 #### Method name: getCategoryMovies
 - List all movies in specific category:
-         - method type: GET
-         - output format: JSON
-         - endpoint: http://localhost:5000/API/v1/getCategoryMovies/<category_name>
+    - method type: GET
+    - output format: JSON
+    - endpoint: http://localhost:5000/API/v1/getCategoryMovies/<category_name>
     - response example:
 ```json
 {
