@@ -4,17 +4,19 @@ import time
 import json
 import jsonify
 import requests
+import psycopg2
 from sqlalchemy import create_engine, select, func
 from sqlalchemy.orm import sessionmaker
 from database_setup import Category, Base, Movie, Genre, User
 
-engine = create_engine('sqlite:///mymoviedb.db')
+#engine = create_engine('postgresql://grader:2ygzC8)5lS75@localhost/mymoviedb')
+engine = create_engine('sqlite:///var/www/catalog/mymoviedb.db?check_same_thread=False')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 THEMOVIEDB_KEY = json.loads(
-    open('client_secrets.json', 'r').read())['web']['themoviedb_key']
+    open('/var/www/catalog/client_secrets.json', 'r').read())['web']['themoviedb_key']
 
 genreslist = requests.get(
     'https://api.themoviedb.org/3/genre/movie/list?api_key={0}&language=en-US'

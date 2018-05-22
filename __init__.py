@@ -9,6 +9,7 @@ from database_setup import Category, Base, Movie, Genre, User
 import datetime
 import time
 import json
+import psycopg2
 from flask import session as login_session
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -23,15 +24,16 @@ auth = HTTPBasicAuth()
 app = Flask(__name__)
 
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r')
+    open('/var/www/catalog/client_secrets.json', 'r')
     .read())['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 THEMOVIEDB_KEY = json.loads(
-    open('client_secrets.json', 'r')
+    open('/var/www/catalog/client_secrets.json', 'r')
     .read())['web']['themoviedb_key']
 
-engine = create_engine('sqlite:///mymoviedb.db')
+#engine = create_engine('postgresql://grader:2ygzC8)5lS75@localhost/mymoviedb')
+engine = create_engine('sqlite:///var/www/catalog/mymoviedb.db?check_same_thread=False')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -46,9 +48,15 @@ def createUser(login_session):
     newUser = User(name=login_session['username'], email=login_session[
                    'email'], picture=login_session['picture'])
     session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
+    try:
+	session.commit()
+        user = session.query(User).filter_by(email=login_session['email']).one()
+        return user.id
+    except:
+	session.rollback()
+	raise
+    finally:
+	session.close()
 
 
 def getUserInfo(user_id):
@@ -124,10 +132,10 @@ def fbconnect():
     # 3 Gets info from fb clients secrets
     app_id = json.loads(
         open(
-            'client_secrets.json',
+            '/var/www/catalog/client_secrets.json',
             'r').read())['web']['app_id']
     app_secret = json.loads(
-        open('client_secrets.json', 'r')
+        open('/var/www/catalog/client_secrets.json', 'r')
         .read())['web']['app_secret']
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=' \
           'fb_exchange_token&client_id={0}&client_secret={1}&' \
@@ -208,7 +216,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets(
-            'client_secrets.json',
+            '/var/www/catalog/client_secrets.json',
             scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)

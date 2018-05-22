@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import sys
+import psycopg2
 from sqlalchemy import Column, ForeignKey, Integer, String, func, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -29,58 +30,6 @@ class Category(Base):
             'name': self.name,
             'id': self.id,
             'created_by': self.created_by,
-        }
-
-
-class Movie(Base):
-    """
-    Class for movie items.
-    """
-    __tablename__ = 'movie'
-
-    id = Column(Integer, primary_key=True)
-    created_by = Column(String(80), nullable=False)
-    time_created = Column(Integer)
-    time_updated = Column(Integer)
-    backdrop_path = Column(String(250))
-    themoviedb_movie_id = Column(Integer)
-    children = relationship("Genre")
-    original_language = Column(String(4))
-    original_title = Column(String(250))
-    overview = Column(String(250))
-    release_date = Column(String(15))
-    poster_path = Column(String(250))
-    popularity = Column(Integer)
-    title = Column(String(80), nullable=False)
-    video = Column(String(250))
-    vote_average = Column(Integer)
-    vote_count = Column(Integer)
-    category_id = Column(Integer, ForeignKey('category.id'))
-    category = relationship(Category)
-    children = relationship("Genre")
-
-    @property
-    def serialize(self):
-        """Return object data in easily serializeable format"""
-        return {
-            'id': self.id,
-            'created_by': self.created_by,
-            'time_created': self.time_created,
-            'time_updated': self.time_updated,
-            'backdrop_path': self.backdrop_path,
-            'themoviedb_movie_id': self.themoviedb_movie_id,
-            'original_language': self.original_language,
-            'original_title': self.original_title,
-            'overview': self.overview,
-            'release_date': self.release_date,
-            'poster_path': self.poster_path,
-            'popularity': self.popularity,
-            'title': self.title,
-            'video': self.video,
-            'vote_average': self.vote_average,
-            'vote_count': self.vote_count,
-            'category_id': self.category_id,
-            # 'category': self.category,
         }
 
 
@@ -125,7 +74,58 @@ class User(Base):
         return pwd_context.verify(password, self.password_hash)
 
 
-engine = create_engine('sqlite:///mymoviedb.db')
+
+class Movie(Base):
+    """
+    Class for movie items.
+    """
+    __tablename__ = 'movie'
+
+    id = Column(Integer, primary_key=True)
+    created_by = Column(String(80), nullable=False)
+    time_created = Column(Integer)
+    time_updated = Column(Integer)
+    backdrop_path = Column(String(250))
+    themoviedb_movie_id = Column(Integer)
+    children = relationship("Genre")
+    original_language = Column(String(4))
+    original_title = Column(String(250))
+    overview = Column(String(250))
+    release_date = Column(String(15))
+    poster_path = Column(String(250))
+    popularity = Column(Integer)
+    title = Column(String(80), nullable=False)
+    video = Column(String(250))
+    vote_average = Column(Integer)
+    vote_count = Column(Integer)
+    category_id = Column(Integer, ForeignKey('category.id'))
+    category = relationship(Category)
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id': self.id,
+            'created_by': self.created_by,
+            'time_created': self.time_created,
+            'time_updated': self.time_updated,
+            'backdrop_path': self.backdrop_path,
+            'themoviedb_movie_id': self.themoviedb_movie_id,
+            'original_language': self.original_language,
+            'original_title': self.original_title,
+            'overview': self.overview,
+            'release_date': self.release_date,
+            'poster_path': self.poster_path,
+            'popularity': self.popularity,
+            'title': self.title,
+            'video': self.video,
+            'vote_average': self.vote_average,
+            'vote_count': self.vote_count,
+            'category_id': self.category_id,
+        }
+
+#engine = create_engine('postgresql://grader:2ygzC8)5lS75@localhost/mymoviedb')
+engine = create_engine('sqlite:///var/www/catalog/mymoviedb.db')
 
 
 Base.metadata.create_all(engine)
